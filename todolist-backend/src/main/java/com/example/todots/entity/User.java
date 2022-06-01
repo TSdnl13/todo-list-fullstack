@@ -1,6 +1,7 @@
 package com.example.todots.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -14,6 +15,9 @@ public class User {
    private String name;
    private String email;
    private String password;
+
+   @OneToMany(mappedBy = "user")
+   private List<TaskList> listOfTaskList;
 
    public User() {
    }
@@ -61,5 +65,13 @@ public class User {
 
    public void setPassword(String password) {
       this.password = password;
+   }
+
+   public List<TaskList> getListOfTaskList() {
+      return listOfTaskList;
+   }
+
+   public void setListOfTaskList(List<TaskList> listOfTaskList) {
+      this.listOfTaskList = listOfTaskList;
    }
 }
