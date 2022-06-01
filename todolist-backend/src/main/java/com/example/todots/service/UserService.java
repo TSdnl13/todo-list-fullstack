@@ -47,4 +47,14 @@ public class UserService {
       user.setName(userUpdate.getName());
       return Optional.of(userRepository.save(user));
    }
+
+   public boolean deleteUserById(Integer userId) {
+      boolean existingUser = userRepository.findById(userId).isPresent();
+
+      if (existingUser) {
+         userRepository.deleteById(userId);
+         return true;
+      }
+      return false;
+   }
 }

@@ -46,4 +46,12 @@ public class UserController {
               .map(savedUser -> new ResponseEntity<>(savedUser, HttpStatus.OK))
               .orElse(new ResponseEntity<>(HttpStatus.CONFLICT));
    }
+
+   @DeleteMapping(path = "/delete/{userId}")
+   public ResponseEntity deleteUserById(@PathVariable("userId") Integer userId) {
+      if (userService.deleteUserById(userId)) {
+         return new ResponseEntity(HttpStatus.OK);
+      }
+      return new ResponseEntity(HttpStatus.NOT_FOUND);
+   }
 }
