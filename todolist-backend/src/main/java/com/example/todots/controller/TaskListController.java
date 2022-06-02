@@ -41,9 +41,8 @@ public class TaskListController {
 
    @PutMapping(path = "/{taskListId}")
    public ResponseEntity<TaskList> updateTaskList(@PathVariable("taskListId") Integer taskListId,
-                                                  @RequestParam("name") String name) {
-      // TODO: Change the way for passing name, name in url must be long an with spaces
-      return taskListService.updateTaskList(taskListId, name)
+                                                  @RequestBody TaskList taskList) {
+      return taskListService.updateTaskList(taskListId, taskList)
               .map(updatedTaskList -> new ResponseEntity<>(updatedTaskList, HttpStatus.OK))
               .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
    }

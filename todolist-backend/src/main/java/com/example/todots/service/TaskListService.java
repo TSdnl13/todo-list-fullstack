@@ -34,13 +34,13 @@ public class TaskListService {
       return Optional.of(taskListRepository.save(taskList));
    }
 
-   public Optional<TaskList> updateTaskList(Integer taskListId, String name) {
+   public Optional<TaskList> updateTaskList(Integer taskListId, TaskList taskList) {
       Optional<TaskList> taskListOptional = taskListRepository.findById(taskListId);
 
       if (taskListOptional.isEmpty()) {
          return Optional.empty();
       }
-      taskListOptional.get().setName(name);
+      taskListOptional.get().setName(taskList.getName());
       return Optional.of(taskListRepository.save(taskListOptional.get()));
    }
 
