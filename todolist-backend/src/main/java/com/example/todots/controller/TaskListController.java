@@ -51,7 +51,7 @@ public class TaskListController {
    @PostMapping
    public ResponseEntity<TaskList> saveTaskList(@RequestBody TaskList taskList) {
       return taskListService.saveTaskList(taskList)
-              .map(savedTaskList -> new ResponseEntity<>(savedTaskList, HttpStatus.OK))
+              .map(savedTaskList -> new ResponseEntity<>(savedTaskList, HttpStatus.CREATED))
               .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
    }
 
