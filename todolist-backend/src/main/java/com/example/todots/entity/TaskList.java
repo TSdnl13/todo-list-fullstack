@@ -3,6 +3,7 @@ package com.example.todots.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "task_list")
@@ -22,6 +23,9 @@ public class TaskList {
    @JoinColumn(name = "user_id", insertable = false, updatable = false)
    @JsonIgnore
    private User user;
+
+   @OneToMany(mappedBy = "taskList")
+   private List<Task> tasks;
 
    public TaskList() {}
 
@@ -66,5 +70,13 @@ public class TaskList {
 
    public void setUser(User user) {
       this.user = user;
+   }
+
+   public List<Task> getTasks() {
+      return tasks;
+   }
+
+   public void setTasks(List<Task> tasks) {
+      this.tasks = tasks;
    }
 }
