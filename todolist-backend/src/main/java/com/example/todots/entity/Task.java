@@ -9,9 +9,10 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "task")
 public class Task {
+
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
-   @Column(name = "task_id", nullable = false)
+   @Column(name = "task_id")
    private Integer taskId;
 
    @Column(name = "name", columnDefinition = "TEXT", nullable = false)
@@ -57,19 +58,12 @@ public class Task {
       this.taskListId = taskListId;
    }
 
-   public Task(Integer taskId, String name,
+   public Task(String name,
                Boolean state, LocalDateTime createdAt,
-               LocalDate dueDate, String note,
-               Boolean isImportant, LocalDateTime completedAt,
                Integer taskListId) {
-      this.taskId = taskId;
       this.name = name;
       this.state = state;
       this.createdAt = createdAt;
-      this.dueDate = dueDate;
-      this.note = note;
-      this.isImportant = isImportant;
-      this.completedAt = completedAt;
       this.taskListId = taskListId;
    }
 

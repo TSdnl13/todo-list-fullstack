@@ -22,7 +22,7 @@ public class TaskService {
       return taskRepository.findAll();
    }
 
-   public Optional<List<Task>> getTasksByTaskList(Integer taskListId) {
+   public Optional<List<Task>> getTasksByTaskListId(Integer taskListId) {
       return Optional.of(taskRepository.findByTaskListId(taskListId));
    }
 
