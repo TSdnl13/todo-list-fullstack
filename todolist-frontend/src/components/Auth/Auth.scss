@@ -1,0 +1,28 @@
+.container {
+   min-height: 100vh;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+}
+
+.text-field {
+   color: #e1e1e1;
+   border-color: #e1e1e1;
+}
+
+.form {
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+   margin-bottom: 24px;
+}
+.min-width-400 {
+   min-width: 400px;
+}
+.link-signin-signup {
+   text-align: center;
+   color: #FF7844;
+   border-bottom: 1px solid #FF7844;
+   cursor: pointer;
+}
