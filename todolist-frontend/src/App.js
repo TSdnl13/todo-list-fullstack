@@ -1,12 +1,11 @@
 import React from 'react';
-import './App.scss';
 import Auth from './components/Auth/Auth';
+
+import './App.scss';
 
 const App = () => {
    return (
-      <div className="App">
-         <Auth />
-      </div>
+      <Auth />
    );
 }
 
