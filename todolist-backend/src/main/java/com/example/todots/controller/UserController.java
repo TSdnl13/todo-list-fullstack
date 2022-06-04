@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -31,6 +32,22 @@ public class UserController {
       return userService.getUserById(userId)
               .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
               .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+   }
+
+   @PostMapping(path = "/signIn")
+   public ResponseEntity<User> signIn(@RequestBody User user) {
+      Optional<User> optionalUser = userService.getUserByEmail(user.getEmail());
+
+      if (optionalUser.isEmpty()) {
+         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      }
+      boolean success = userService.signIn(user, optionalUser.get());
+
+      if (success) {
+         return new ResponseEntity<>(optionalUser.get(), HttpStatus.OK);
+      }
+
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
    }
 
    @PutMapping(path = "/{userId}")

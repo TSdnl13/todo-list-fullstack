@@ -3,6 +3,7 @@ package com.example.todots.service;
 import com.example.todots.entity.User;
 import com.example.todots.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,10 +13,12 @@ import java.util.Optional;
 public class UserService {
 
    private final UserRepository userRepository;
+   private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
    @Autowired
-   public UserService(UserRepository userRepository) {
+   public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
       this.userRepository = userRepository;
+      this.bCryptPasswordEncoder = bCryptPasswordEncoder;
    }
 
    public List<User> getUsers() {
@@ -32,7 +35,8 @@ public class UserService {
       if (existingUser) {
          return Optional.empty();
       }
-
+      String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+      user.setPassword(encodedPassword);
       return Optional.of(userRepository.save(user));
    }
 
@@ -53,6 +57,17 @@ public class UserService {
 
       if (existingUser) {
          userRepository.deleteById(userId);
+         return true;
+      }
+      return false;
+   }
+
+   public Optional<User> getUserByEmail(String email) {
+      return userRepository.findByEmail(email);
+   }
+
+   public boolean signIn(User userToLogin, User existingUser) {
+      if (bCryptPasswordEncoder.matches(userToLogin.getPassword(), existingUser.getPassword())) {
          return true;
       }
       return false;
