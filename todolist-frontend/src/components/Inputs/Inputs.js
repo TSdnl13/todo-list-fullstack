@@ -1,39 +1,24 @@
 import { TextField } from '@mui/material';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 
-const darkTheme = createTheme({
-   palette: {
-      mode: 'dark',
-      primary: {
-         light: '#FF925E',
-         main: '#FF7844',
-         dark: '#E65F2B',
-         contrastText: '#e9e9e9',
-      }
+export const MyTextField = styled(TextField)({
+   '& label.Mui-focused': {
+      color: '#FF925E',
+   },
+   '& .MuiInput-underline:after': {
+      borderBottomColor: '#FF925E',
+   },
+   '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+         borderColor: '#FF7844',
+      },
+      '&:hover fieldset': {
+         borderColor: '#FF925E',
+      },
+      '&.Mui-focused fieldset': {
+         borderColor: '#E65F2B',
+      },
    },
 });
 
-export const MyTextField = ({ label,
-               variant,
-               helperText,
-               error=false,
-               size,
-               onChange,
-               name,
-             }) => {
-
-   return (
-      <ThemeProvider theme={darkTheme}>
-         <TextField
-            label={label}
-            variant={variant}
-            helperText={helperText}
-            error={error}
-            size={size}
-            onChange={onChange}
-            name={name}
-         />
-      </ThemeProvider>
-   );
-}
 
