@@ -1,6 +1,7 @@
 package com.example.todots.controller;
 
 import com.example.todots.entity.User;
+import com.example.todots.entity.projections.UserSummary;
 import com.example.todots.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(path = "api/user")
 public class UserController {
@@ -35,8 +36,8 @@ public class UserController {
    }
 
    @PostMapping(path = "/signIn")
-   public ResponseEntity<User> signIn(@RequestBody User user) {
-      Optional<User> optionalUser = userService.getUserByEmail(user.getEmail());
+   public ResponseEntity<UserSummary> signIn(@RequestBody User user) {
+      Optional<UserSummary> optionalUser = userService.getUserByEmail(user.getEmail());
 
       if (optionalUser.isEmpty()) {
          return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -53,7 +54,7 @@ public class UserController {
    @PutMapping(path = "/{userId}")
    public ResponseEntity<User> updateUser(@PathVariable("userId") Integer userId,
                                           @RequestBody User user) {
-      return userService.updateUSer(userId, user)
+      return userService.updateUser(userId, user)
               .map(updatedUser -> new ResponseEntity<>(updatedUser, HttpStatus.OK))
               .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
    }
