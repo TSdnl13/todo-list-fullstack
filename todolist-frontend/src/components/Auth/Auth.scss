@@ -21,8 +21,12 @@
    min-width: 400px;
 }
 .link-signin-signup {
+   display: inline;
    text-align: center;
    color: #FF7844;
    border-bottom: 1px solid #FF7844;
    cursor: pointer;
+}
+.h1 {
+   color: #f9f9f9;
 }
