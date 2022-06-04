@@ -1,6 +1,7 @@
 package com.example.todots.service;
 
 import com.example.todots.entity.User;
+import com.example.todots.entity.projections.UserSummary;
 import com.example.todots.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -40,14 +41,17 @@ public class UserService {
       return Optional.of(userRepository.save(user));
    }
 
-   public Optional<User> updateUSer(Integer userId, User userUpdate) {
+   public Optional<User> updateUser(Integer userId, User userUpdate) {
       Optional<User> optionalUser = userRepository.findById(userId);
 
       if (optionalUser.isEmpty()) {
          return Optional.empty();
       }
       User user = optionalUser.get();
-      user.setPassword(userUpdate.getPassword());
+      if (!bCryptPasswordEncoder.matches(userUpdate.getPassword(), user.getPassword())) {
+         String encodedPassword = bCryptPasswordEncoder.encode(userUpdate.getPassword());
+         user.setPassword(encodedPassword);
+      }
       user.setName(userUpdate.getName());
       return Optional.of(userRepository.save(user));
    }
@@ -62,11 +66,11 @@ public class UserService {
       return false;
    }
 
-   public Optional<User> getUserByEmail(String email) {
-      return userRepository.findByEmail(email);
+   public Optional<UserSummary> getUserByEmail(String email) {
+      return userRepository.findUserSummaryByEmail(email);
    }
 
-   public boolean signIn(User userToLogin, User existingUser) {
+   public boolean signIn(User userToLogin, UserSummary existingUser) {
       if (bCryptPasswordEncoder.matches(userToLogin.getPassword(), existingUser.getPassword())) {
          return true;
       }
