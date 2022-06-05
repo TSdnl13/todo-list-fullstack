@@ -78,7 +78,7 @@ const Auth = () => {
            
          const user = { email: response.data?.email, userId: response.data?.userId, name: response.data?.name }
          localStorage.setItem('user', JSON.stringify(user));
-         navigate('/home');
+         navigate('/dashboard');
          
       } catch(error) {
          if (error.response?.status === 404) {
