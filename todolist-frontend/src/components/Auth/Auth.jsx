@@ -19,7 +19,7 @@ const Auth = () => {
    const [passwordError, setPasswordError] = useState(false);
    const [formData, setFormData] = useState(initialState);
    const [showPassword, setShowPassword] = useState(false);
-   const [errorMessages, setErrorMessages] = useState({ email: '', password: ''});
+   const [errorMessages, setErrorMessages] = useState({ email: '', password: '', status: 0});
 
    const navigate = useNavigate();
 
@@ -85,14 +85,21 @@ const Auth = () => {
             setEmailError(true);
          } else if(error.response?.status === 400 ) {
             setPasswordError(true);
+         } else if (error.response?.status === 409) {
+            setErrorMessages({...errorMessages, status: 409});
+            setEmailError(true);
          }
       }
    }
 
    useEffect(() => {
-      setErrorMessages({ ...errorMessages, email: 'User with this email doesn\'t exist' });
+      
+      setErrorMessages({ 
+         ...errorMessages, 
+         email: errorMessages.status === 409 ? 'Email already taken':'User with this email doesn\'t exist' 
+      });
       // eslint-disable-next-line
-   }, [emailError, passwordError]);
+   }, [emailError]);
    
 
    const handleChange = (e) => {
