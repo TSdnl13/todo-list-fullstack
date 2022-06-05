@@ -1,0 +1,13 @@
+
+.dashboard {
+   max-height: 100vh;
+   height: 100vh;
+   display: flex;
+
+   .dashboard__panel {
+      width: 100%;
+   }
+   .sidebar {
+      min-width: 280px;
+   }
+}
