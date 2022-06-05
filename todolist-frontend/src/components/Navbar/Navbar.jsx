@@ -1,0 +1,42 @@
+import React, { useState } from 'react';
+import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
+import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
+
+import './Navbar.scss';
+import { useNavigate } from 'react-router-dom';
+
+const Navbar = ({ user }) => {
+   const [isArrowUp, setIsArrowUp] = useState(false);
+   const navigate =  useNavigate();
+   
+   const signOut = () => {
+      localStorage.clear();
+      navigate('/auth');
+   }
+
+   return (
+      <nav className='nav'>
+         <div className='nav__profile' onClick={() => setIsArrowUp(prev => !prev)}>
+            <div className='nav__profile-img'>
+               {user?.name?.split(' ')[0].charAt(0)} {user?.name?.split(' ')[1]?.charAt(0)}
+            </div>
+            <div className='nav__profile-user'>{user?.name}</div>
+            { isArrowUp ? (
+            <>
+            <KeyboardArrowUpRoundedIcon />
+            <div className='nav__profile-menu'>
+               <span>{user?.email}</span>
+               <p><ManageAccountsOutlinedIcon /> Profile</p>
+               <p onClick={signOut}><LogoutRoundedIcon /> Sign out</p>
+            </div>
+            </>
+            ):(<KeyboardArrowDownRoundedIcon />)}
+           
+         </div>
+      </nav>
+   )
+}
+
+export default Navbar;
