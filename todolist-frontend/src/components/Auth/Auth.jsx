@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FormControl, Input, TextField, InputLabel, IconButton } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { red } from '@mui/material/colors';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import { PrimaryButton } from '../Buttons/Buttons';
 import './Auth.scss';
@@ -17,6 +19,9 @@ const Auth = () => {
    const [passwordError, setPasswordError] = useState(false);
    const [formData, setFormData] = useState(initialState);
    const [showPassword, setShowPassword] = useState(false);
+   const [errorMessages, setErrorMessages] = useState({ email: '', password: ''});
+
+   const navigate = useNavigate();
 
    const darkTheme = createTheme({
       palette: {
@@ -47,10 +52,15 @@ const Auth = () => {
 
    const validateInputs = () =>{
       if (formData.name === '') {
-         setNameError(true);
+         if (isSignUp) {
+            setNameError(true);
+         }else {
+            setNameError(false);
+         }
       }
-      if (formData.email === '') {
+      if (formData.email.trim() === '') {
          setEmailError(true);
+         setErrorMessages({...errorMessages, email: "Cannot be empty"})
       }
       if (formData.password === '') {
          setPasswordError(true);
@@ -60,10 +70,30 @@ const Auth = () => {
       return false;
    }
 
-   const handleSubmit = () => {
+   const handleSubmit = async () => {
       if (!validateInputs()) return;
-      
+
+      try {
+         const response = await axios.post(`http://localhost:8080/api/user${isSignUp ? '': '/signIn'}`, formData);
+           
+         const user = { email: response.data?.email, userId: response.data?.userId, name: response.data?.name }
+         localStorage.setItem('user', JSON.stringify(user));
+         navigate('/home');
+         
+      } catch(error) {
+         if (error.response?.status === 404) {
+            setEmailError(true);
+         } else if(error.response?.status === 400 ) {
+            setPasswordError(true);
+         }
+      }
    }
+
+   useEffect(() => {
+      setErrorMessages({ ...errorMessages, email: 'User with this email doesn\'t exist' });
+      // eslint-disable-next-line
+   }, [emailError, passwordError]);
+   
 
    const handleChange = (e) => {
       setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -94,7 +124,7 @@ const Auth = () => {
                      name='email'
                      value={formData.email}
                      color='secondary'
-                     helperText={emailError ? 'Cannot be empty' : ''}
+                     helperText={emailError ? errorMessages.email : ''}
                   />
                   
                   {isSignUp && (
