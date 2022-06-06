@@ -18,22 +18,24 @@ const Navbar = ({ user }) => {
 
    return (
       <nav className='nav'>
-         <div className='nav__profile' onClick={() => setIsArrowUp(prev => !prev)}>
-            <div className='nav__profile-img'>
-               {user?.name?.split(' ')[0].charAt(0)} {user?.name?.split(' ')[1]?.charAt(0)}
+         <div className='relative'>
+            <div className='nav__profile' onClick={() => setIsArrowUp(prev => !prev)}>
+               <div className='nav__profile-img'>
+                  {user?.name?.split(' ')[0].charAt(0)} {user?.name?.split(' ')[1]?.charAt(0)}
+               </div>
+               <div className='nav__profile-user'>{user?.name}</div>
+               { isArrowUp ? (
+               <KeyboardArrowUpRoundedIcon />
+               ):(<KeyboardArrowDownRoundedIcon />)}
+
             </div>
-            <div className='nav__profile-user'>{user?.name}</div>
-            { isArrowUp ? (
-            <>
-            <KeyboardArrowUpRoundedIcon />
+            { isArrowUp && (
             <div className='nav__profile-menu'>
                <span>{user?.email}</span>
                <p><ManageAccountsOutlinedIcon /> Profile</p>
                <p onClick={signOut}><LogoutRoundedIcon /> Sign out</p>
             </div>
-            </>
-            ):(<KeyboardArrowDownRoundedIcon />)}
-           
+            )}
          </div>
       </nav>
    )
