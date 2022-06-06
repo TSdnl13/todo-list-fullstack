@@ -3,12 +3,17 @@
 :root {
   --font-base: 'Noto Sans', sans-serif;
 }
+*, *::after, *::before {
+  box-sizing: border-box;
+}
 
 html {
   font-family: var(--font-base);
 }
 
 body {
+  margin: 0;
+  padding: 0;
   background-color: #1B1F3A;
   color: #e9e9e9;
 }
