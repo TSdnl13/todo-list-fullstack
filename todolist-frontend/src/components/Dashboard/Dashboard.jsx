@@ -10,14 +10,13 @@ const Dashboard = () => {
    const user = JSON.parse(localStorage.getItem('user'));
 
    const [taskLists, setTaskLists] = useState([]);
-   
+   const [tasks, setTasks] = useState({taskListName: '', tasks: []});
    
    useEffect(() => {
       const getUserTaskLists = async () => {
          try {
             const response = await axios.get(`http://localhost:8080/api/taskList/user?id=${user?.userId}`);
             setTaskLists(response.data);
-            console.log(taskLists);
          } catch (error) {
             console.log(error);
          }
@@ -28,14 +27,12 @@ const Dashboard = () => {
    // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
    
-   
-   
    return (
       <div className='dashboard'>
-         <Sidebar className='sidebar' taskLists={taskLists} setTaskLists={setTaskLists} />
+         <Sidebar taskLists={taskLists} setTaskLists={setTaskLists} setTasks={setTasks} />
          <div className='dashboard__panel'>
             <Navbar user={user} />
-            <Tasks />
+            <Tasks tasks={tasks} />
          </div>
       </div>
    )
