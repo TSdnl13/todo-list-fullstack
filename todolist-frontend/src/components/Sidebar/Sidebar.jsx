@@ -7,7 +7,7 @@ import DensityMediumOutlinedIcon from '@mui/icons-material/DensityMediumOutlined
 
 import './Sidebar.scss';
 
-const Sidebar = ({taskLists, setTaskLists}) => {
+const Sidebar = ({taskLists, setTaskLists, setTasks }) => {
 
    return (
       <div className="sidebar" >
@@ -31,15 +31,23 @@ const Sidebar = ({taskLists, setTaskLists}) => {
          <div className='sidebar__tasklists'>
             <ul>
                {taskLists && taskLists.map((taskList) => (
-                  <li key={taskList.taskListId} className='sidebar-container'>
+                  <li
+                     key={taskList.taskListId}
+                     className='sidebar-container'
+                     onClick={() => setTasks({ taskListName: taskList.name, tasks: taskList.tasks})}
+                  >
                      <DensityMediumOutlinedIcon  fontSize='small' />
                      <p>{taskList.name}</p>
+                     {taskList?.tasks.length > 0 && 
+                     (<span>{taskList.tasks?.filter(task => task.state === false).length}</span>)}
                   </li>
                ))}
             </ul>         
          </div>
          <div className='sidebar__create-tasklist'>
-            <button><AddSharpIcon fontSize='small' /> New List</button>
+            <button>
+               <AddSharpIcon fontSize='small' /> New List
+            </button>
          </div>
       </div>
    )

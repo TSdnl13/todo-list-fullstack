@@ -45,12 +45,28 @@ p {
       }
    }
 }
-
+.sidebar__tasklists {
+   span {
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: #333b6e;
+      font-size: 12px;
+      position: absolute;
+      font-weight: 200;
+      color: #FFF;
+      right: 5%;
+   }
+}
 .sidebar__menu {
    border-bottom: 1px solid #363e74;
 }
 
 .sidebar-container {
+   position: relative;
    padding: 8px 12px;
 }
 .sidebar__create-tasklist {
@@ -72,7 +88,7 @@ p {
       display: flex;
       align-items: center;
       gap: 6px;
-      
+
       &:hover {
          background-color: #292f57;
       }
