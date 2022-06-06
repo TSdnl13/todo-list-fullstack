@@ -1,0 +1,80 @@
+.sidebar {
+   border-right: 2px solid rgba(0, 0, 0, 0.25);
+   padding: 4px;
+   display: flex;
+   flex-direction: column;
+   min-width: 280px;
+   align-items: flex-start;
+   position: relative;
+
+   .h1 {
+      margin: 16px 0;
+   }
+}
+
+li {
+   list-style: none;
+}
+p {
+   margin: 0;
+}
+
+.sidebar__menu, .sidebar__tasklists {
+   padding: 12px 0;
+   display: flex;
+   width: 100%;
+
+   ul {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+
+      li {
+         font-weight: 200;
+         display: flex;
+         align-items: center;
+         justify-content: flex-start;
+         gap: 14px;
+         cursor: pointer;
+         border-radius: 8px;
+
+         &:hover {
+            background-color: #292f57;
+         }
+      }
+   }
+}
+
+.sidebar__menu {
+   border-bottom: 1px solid #363e74;
+}
+
+.sidebar-container {
+   padding: 8px 12px;
+}
+.sidebar__create-tasklist {
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   right: 0;
+   padding: 4px;
+
+   button {
+      width: 100%;
+      color: #FFF;
+      font-size: 14px;
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+      text-align: left;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      
+      &:hover {
+         background-color: #292f57;
+      }
+   }
+}

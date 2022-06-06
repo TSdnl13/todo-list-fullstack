@@ -1,37 +1,45 @@
 import React from 'react';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
+import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import DensityMediumOutlinedIcon from '@mui/icons-material/DensityMediumOutlined';
 
 import './Sidebar.scss';
 
-const Sidebar = ({className, taskLists, setTaskLists}) => {
+const Sidebar = ({taskLists, setTaskLists}) => {
 
    return (
-      <div className={className} >
-         <h1>Projects</h1>
-         <div>
+      <div className="sidebar" >
+         <h1 className='h1 sidebar-container'>Ts To Do</h1>
+         <div className='sidebar__menu'>
             <ul>
-               <li>
+               <li className='sidebar-container'>
+                  <GradeOutlinedIcon fontSize='small' />
                   <p>Important</p>
                </li>
-               <li>
+               <li className='sidebar-container'>
+                  <CalendarMonthOutlinedIcon fontSize='small' />
                   <p>Planed</p>
                </li> 
-               <li>
+               <li className='sidebar-container'>
+                  <HomeOutlinedIcon fontSize='small' />
                   <p>Tasks</p>
                </li>
             </ul>
          </div>
-         <div>
+         <div className='sidebar__tasklists'>
             <ul>
                {taskLists && taskLists.map((taskList) => (
-                  <li key={taskList.taskListId}>
+                  <li key={taskList.taskListId} className='sidebar-container'>
+                     <DensityMediumOutlinedIcon  fontSize='small' />
                      <p>{taskList.name}</p>
                   </li>
                ))}
             </ul>         
          </div>
-         <div>
-            <button><AddSharpIcon /> New List</button>
+         <div className='sidebar__create-tasklist'>
+            <button><AddSharpIcon fontSize='small' /> New List</button>
          </div>
       </div>
    )
