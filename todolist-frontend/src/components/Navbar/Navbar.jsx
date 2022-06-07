@@ -17,7 +17,7 @@ const Navbar = ({ user }) => {
    }
 
    return (
-      <nav className='nav'>
+      <nav className='nav' id='navbar'>
          <div className='relative'>
             <div className='nav__profile' onClick={() => setIsArrowUp(prev => !prev)}>
                <div className='nav__profile-img'>
