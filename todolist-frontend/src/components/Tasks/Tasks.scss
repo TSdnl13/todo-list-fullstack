@@ -1,3 +1,108 @@
 .tasks {
    padding: 50px;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+}
+
+.tasks__container {
+   h2 {
+      font-size: 28px;
+      font-weight: 400;
+   }
+   .tasks-subtile {
+      font-size: 15px;
+      font-weight: 300;
+      background-color: rgba(54, 62, 116, 0.5);
+      margin: .8rem 0;
+      display: inline-flex;
+      padding: .3rem .2rem;
+      border-radius: .3rem;
+      &:hover {
+         background-color: rgba(54, 62, 116, 0.8);
+      }
+      span {
+         margin-left: .5rem;
+      }
+   }
+   ul {
+      display: flex;
+      flex-direction: column;
+      gap: .3rem;
+      align-items: flex-start;
+   }
+   li {
+      padding: .5rem 1rem;
+      background-color: rgba(54, 62, 116, 0.5);
+      border-radius: .3rem;
+      width: 100%;
+      p{
+         line-height: 1.4;
+         font-size: 14px;
+      }
+      &:hover {
+         background-color: rgba(54, 62, 116, 0.8);
+      }
+   }
+}
+
+.tasks__create-task { 
+   width: 100%;  
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   background-color: #292f57;
+   padding: 2px;
+   padding-left: 8px;
+   border-radius: .3rem;
+   &:hover{
+      background-color: #363e74;
+   }
+
+   input {
+      border: none;
+      background-color: transparent;
+      outline: none;
+      caret-color: #f8f8f8;
+      flex: 1;
+      padding: 8px 2px;
+      font-size: 16px;
+      color: #fdfdfd;
+   }
+
+   .due-date {
+      width: 30px;
+      padding: 0 5px;
+
+      &:hover {
+         background-color: #313868;
+      }
+   }
+
+   button {
+      background-color: transparent;
+      color: #f0f0f0;
+      border: none;
+      display: flex;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 14px;
+      font-weight: 300;
+
+      &:hover {
+         background-color: #313868;
+      }
+   }
+
+   svg {
+      height: 100%;
+   }
+
+}
+
+h2 {
+   margin: 0 0 10px 0;
 }
