@@ -7,18 +7,44 @@ import DensityMediumOutlinedIcon from '@mui/icons-material/DensityMediumOutlined
 
 import './Sidebar.scss';
 
-const Sidebar = ({taskLists, setTaskLists, setTasks }) => {
+const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId }) => {
+
+   
+   const findImportantTasks = () => {
+      const importantTasks = [];
+      taskLists.forEach(taskList => {
+         const importants = taskList?.tasks?.filter(task => task.important === true);
+         importants.forEach(imp => importantTasks.push(imp));
+      });
+      return importantTasks;
+   }
+
+   const findPlanedTasks = () => {
+      
+   }
 
    return (
       <div className="sidebar" >
          <h1 className='h1 sidebar-container'>Ts To Do</h1>
          <div className='sidebar__menu'>
             <ul>
-               <li className='sidebar-container'>
+               <li 
+                  className={taskListId === 0 ? 'sidebar-container active': 'sidebar-container'} 
+                  onClick={() => {
+                     setTasks({ taskListName: 'Importants', tasks: findImportantTasks() });
+                     setTaskListId(0);
+                  }}
+               >
                   <GradeOutlinedIcon fontSize='small' />
                   <p>Important</p>
                </li>
-               <li className='sidebar-container'>
+               <li 
+                  className={taskListId === -1 ? 'sidebar-container active': 'sidebar-container'} 
+                  onClick={() => {
+                     setTasks({ taskListName: 'Planed', tasks: findPlanedTasks() });
+                     setTaskListId(-1);
+                  }}
+               >
                   <CalendarMonthOutlinedIcon fontSize='small' />
                   <p>Planed</p>
                </li> 
@@ -33,8 +59,11 @@ const Sidebar = ({taskLists, setTaskLists, setTasks }) => {
                {taskLists && taskLists.map((taskList) => (
                   <li
                      key={taskList.taskListId}
-                     className='sidebar-container'
-                     onClick={() => setTasks({ taskListName: taskList.name, tasks: taskList.tasks})}
+                     className={'sidebar-container ' + (taskList.taskListId === taskListId ? 'active': '')}
+                     onClick={() => {
+                        setTasks({ taskListName: taskList.name, tasks: taskList.tasks})
+                        setTaskListId(taskList.taskListId);
+                     }}
                   >
                      <DensityMediumOutlinedIcon  fontSize='small' />
                      <p>{taskList.name}</p>
