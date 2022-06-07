@@ -1,24 +1,67 @@
 import { TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-export const MyTextField = styled(TextField)({
-   '& label.Mui-focused': {
-      color: '#FF925E',
-   },
+export const DueDateTextField = styled(TextField)({
+   color: '#e8e8e8',
+   borderBlockColor: '#292f57',
    '& .MuiInput-underline:after': {
-      borderBottomColor: '#FF925E',
+      borderColor: 'transparent',
+   },
+   '& .MuiInputAdornment-root': {
+      height: '100%'
    },
    '& .MuiOutlinedInput-root': {
       '& fieldset': {
-         borderColor: '#FF7844',
+         borderColor: 'transparent',
       },
       '&:hover fieldset': {
-         borderColor: '#FF925E',
+         borderColor: 'transparent',
       },
       '&.Mui-focused fieldset': {
-         borderColor: '#E65F2B',
+         borderColor: 'transparent',
       },
    },
+   maxWidth: '140px',
+   "&:hover": {
+      backgroundColor: '#313868'
+   },
+   "&:after": {
+      content: `''`,
+      position: 'absolute',
+      top: '-0.25rem',
+      left: '50%',
+      transform: 'translateX(-50%) translateY(0) scale(0)',
+      transition: '100ms transform',
+      transformOrigin: 'bottom center',
+      border: '10px solid transparent',
+      borderTopColor: '#313868',
+      opacity: '0'
+   },
+   "&:before": {
+      position: 'absolute',
+      top: '-0.25rem',
+      left: '50%',
+      transform: 'translateX(-50%) translateY(0) scale(0)',
+      content: `'Add Due Date'`,
+      color: '#e9e9e9',
+      padding: '.3rem .4rem',
+      borderRadius: '2px',
+      textAlign: 'center',
+      width: 'max-content',
+      maxWidth: '100%',
+      backgroundColor: '#313868',
+      transition: '100ms transform',
+      transformOrigin: 'bottom center',
+      opacity: '0'      
+   },
+   "&:hover:before": {
+      transform: 'translateX(-50%) translateY(-120%) scale(1)',
+      opacity: '1'
+   },
+   "&:hover:after": {
+      transform: 'translateX(-50%) translateY(-50%) scale(1)',
+      opacity: '1'
+   }
 });
 
 
