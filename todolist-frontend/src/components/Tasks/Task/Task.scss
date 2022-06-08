@@ -1,0 +1,21 @@
+.task {
+   display: flex;
+   gap: 8px;
+   align-items: center;
+   padding: .5rem 1rem;
+   border-radius: .3rem;
+   min-height: 58px;
+   background-color: rgba(54, 62, 116, 0.5);
+
+   .task__details {
+      flex: 1;
+   }
+
+   p{
+      line-height: 1.4;
+      font-size: 14px;
+   }
+   &:hover {
+      background-color: rgba(54, 62, 116, 0.8);
+   }
+}

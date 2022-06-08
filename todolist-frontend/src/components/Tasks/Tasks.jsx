@@ -25,8 +25,6 @@ const Tasks = ({ tasks, setTasks }) => {
       }
    });
 
-   console.log(tasks);
-
    return (
       <div className='tasks' style={{ height: `calc(100vh - ${navbar?.offsetHeight}px)`}}>
          <div className='tasks__container'>
