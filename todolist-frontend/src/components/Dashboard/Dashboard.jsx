@@ -39,7 +39,7 @@ const Dashboard = () => {
          />
          <div className='dashboard__panel'>
             <Navbar user={user} />
-            <Tasks tasks={tasks} />
+            <Tasks tasks={tasks} setTasks={setTasks} />
          </div>
       </div>
    )
