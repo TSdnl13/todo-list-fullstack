@@ -2,10 +2,22 @@
    padding: 50px;
    display: flex;
    flex-direction: column;
+   gap: 16px;
    justify-content: space-between;
 }
 
 .tasks__container {
+   overflow: auto;
+
+   &::-webkit-scrollbar {
+      background-color: transparent;
+      width: 8px;
+   }
+   &::-webkit-scrollbar-thumb {
+      background-color: #a8a0b8;
+      border-radius: 0.2rem;
+   }
+
    h2 {
       font-size: 28px;
       font-weight: 400;
@@ -24,6 +36,9 @@
       span {
          margin-left: .5rem;
       }
+      p {
+         cursor: default;
+      }
    }
    ul {
       display: flex;
@@ -32,17 +47,8 @@
       align-items: flex-start;
    }
    li {
-      padding: .5rem 1rem;
-      background-color: rgba(54, 62, 116, 0.5);
       border-radius: .3rem;
       width: 100%;
-      p{
-         line-height: 1.4;
-         font-size: 14px;
-      }
-      &:hover {
-         background-color: rgba(54, 62, 116, 0.8);
-      }
    }
 }
 
@@ -105,4 +111,26 @@
 
 h2 {
    margin: 0 0 10px 0;
+}
+
+.tasks__completed {
+   transition: all 250ms ease-in-out;
+}
+
+.hide-tasks {
+   opacity: 0;
+   height: 0;
+   
+   div {
+      padding-top: 0;
+      padding-bottom: 0;
+      height: 0;
+      opacity: 0;
+   }
+   display: none !important;
+}
+
+.show-tasks {
+   height: 100%;
+   opacity: 1;
 }
