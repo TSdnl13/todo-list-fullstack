@@ -74,7 +74,7 @@ const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId }
             </ul>         
          </div>
          <div className='sidebar__create-tasklist'>
-            <button>
+            <button type='button'>
                <AddSharpIcon fontSize='small' /> New List
             </button>
          </div>
