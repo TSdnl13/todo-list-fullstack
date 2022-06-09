@@ -9,6 +9,20 @@
 
    .task__details {
       flex: 1;
+      line-height: 1.7;
+      font-size: 14px;
+
+      .task__details-more-info {
+         font-size: 12px;
+         line-height: 1.4;
+         font-weight: 300;
+         color: #dadada;
+         span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+         }
+      }
    }
 
    p{

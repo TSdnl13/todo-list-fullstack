@@ -6,6 +6,9 @@ import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
 import { blue, indigo } from '@mui/material/colors';
 import axios from 'axios';
+import { format } from 'date-fns';
+import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import './Task.scss';
 
@@ -14,26 +17,34 @@ const Task = ({ task, setTasks, tasks }) => {
 
    const updateTask = async (e) => {
       const url = `http://localhost:8080/api/task/${formData.taskId}`;
-      try {
-         if (e.target.name === 'state') {
-            setFormData({ ...formData, state: e.target.checked });
-            
-            const response = await axios.put(url, { ...formData, state: e.target.checked });
-            const updatedTask = await response.data;
-            const filteredTask = await tasks.tasks.filter(tsk => tsk.taskId !== updatedTask.taskId );
-            setTasks({...tasks, tasks: [...filteredTask, updatedTask]});
-         } else if (e.target.name === 'important'){
-            setFormData({ ...formData, important: e.target.checked});
-            
-            const response = await axios.put(url, { ...formData, important: e.target.checked });
-            const updatedTask = await response.data;
-            const filteredTask = await tasks.tasks.filter(tsk => tsk.taskId !== updatedTask.taskId );
-            setTasks({...tasks, tasks: [...filteredTask, updatedTask]});
-         }
-      } catch (error) {
-         console.log(error);
+
+      setFormData({ ...formData, [e.target.name]: e.target.checked });
+      let completedDate = (e.target.name === 'state') ? format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"): formData.completedAt;
+      if (e.target.name === 'state' && formData.state === true) {
+         completedDate = null;
       }
+      axios.put(url, {
+            ...formData, 
+            [e.target.name]: e.target.checked,
+            completedAt: completedDate
+         })
+         .then((response) => {
+            const updatedTask = response.data;
+            const filteredTask = tasks.tasks.filter(tsk => tsk.taskId !== updatedTask.taskId );
+            setTasks({...tasks, tasks: [...filteredTask, updatedTask]});
+         })
+         .catch(error => {
+            console.log(error)
+         });
    }
+
+   const iconTheme = createTheme({
+      palette: {
+         primary: {
+            main: '#dadada',
+         },
+      },
+    });
 
    return (
       <div className='task'>
@@ -55,6 +66,19 @@ const Task = ({ task, setTasks, tasks }) => {
 
          <div className='task__details'>
             <p>{formData.name}</p>
+            {(formData.dueDate || formData.note) && (
+               <p className='task__details-more-info'>
+                  {formData.dueDate && (
+                  <span>
+                     <ThemeProvider theme={iconTheme}>
+                        <CalendarTodayOutlinedIcon sx={{ color: 'primary.main', fontSize: '12px' }} /> 
+                     </ThemeProvider>
+                     {format(new Date(formData.dueDate), "eee',' MMM d")}
+                  </span>
+                  )}
+                  <span>{formData.note || ''}</span>
+               </p>
+            )}
          </div>
 
          <Checkbox 
