@@ -8,11 +8,14 @@ This is a task manager and **to-do list** web app.
 > 
 > - Java
 > - Spring Boot
+> - Spring Data JPA
 > - PostgreSql
 
 
 > ### Frontend
 > 
+> - HTML
+> - CSS
 > - React Js
 > - Sass
 > - Material UI v5
