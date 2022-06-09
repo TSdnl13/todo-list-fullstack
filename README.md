@@ -10,3 +10,10 @@ This is a task manager and **to-do list** web app.
 > - Spring Boot
 > - PostgreSql
 
+
+> ### Frontend
+> 
+> - React Js
+> - Sass
+> - Material UI v5
+> - JavaScript
