@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -6,17 +6,21 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import axios from 'axios';
+import { format, isValid } from 'date-fns';
+
 
 import './Tasks.scss';
 import { DueDateTextField } from '../Inputs/Inputs';
 import Task from './Task/Task';
 
-const Tasks = ({ tasks, setTasks }) => {
-   const [value, setValue] = useState('');
+const Tasks = ({ tasks, setTasks, taskListId }) => {
+   const initialTaskState = {name: '', state: false, createdAt: '', taskListId: taskListId, dueDate: ''};
    const completedTasks = tasks.tasks?.filter(task => task.state === true);
    const pendingTasks = tasks.tasks?.filter(task => task.state === false);
    const navbar = document.getElementById('navbar');
    const [showCompletedTasks, setShowCompletedTasks] = useState(true);
+   const [taskData, setTaskData] = useState(initialTaskState);
 
    const darkDatePicker = createTheme({
       palette: {
@@ -24,6 +28,29 @@ const Tasks = ({ tasks, setTasks }) => {
          error: {main: '#292f58'}
       }
    });
+   
+   useEffect(() => {
+      setTaskData({...taskData, taskListId: taskListId});
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [taskListId]);
+   
+
+   const createTask = () => {
+      let postData = {};
+      if (isValid(taskData.dueDate)) {
+         postData = {...taskData, dueDate: format(taskData.dueDate, 'yyyy-MM-dd')};
+      } else {
+         postData = {...taskData, dueDate: null};
+      }
+      axios.post('http://localhost:8080/api/task', {...postData, createdAt: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss")})
+      .then((response) => {
+         setTaskData(initialTaskState);
+         setTasks({...tasks, tasks: [...tasks.tasks, response.data]});
+      })
+      .catch(error => {
+         console.log(error);
+      });
+   }
 
    return (
       <div className='tasks' style={{ height: `calc(100vh - ${navbar?.offsetHeight}px)`}}>
@@ -68,13 +95,18 @@ const Tasks = ({ tasks, setTasks }) => {
 
          <div className='tasks__create-task'>
             <AddSharpIcon fontSize='small' />
-            <input type='text' placeholder='New Task' />
+            <input
+               type='text'
+               placeholder='New Task'
+               onChange={(e) => setTaskData({...taskData, name: e.target.value})}
+               value={taskData.name}
+            />
             <ThemeProvider theme={darkDatePicker}>
                <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                     value={value}
-                     onChange={(newValue) => {
-                        setValue(newValue);
+                     value={taskData.dueDate}
+                     onChange={(newDate) => {
+                        setTaskData({...taskData, dueDate: newDate});
                      }}
                      renderInput={(params) => (
                         <DueDateTextField size='small' {...params} />
@@ -82,7 +114,7 @@ const Tasks = ({ tasks, setTasks }) => {
                   />
                </LocalizationProvider>
             </ThemeProvider>
-            <button type='button'>Create</button>
+            <button type='button' onClick={createTask} >Create</button>
          </div>
       </div>
    )
