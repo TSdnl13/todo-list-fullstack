@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 
 export const DueDateTextField = styled(TextField)({
    color: '#e8e8e8',
-   borderBlockColor: '#292f57',
+   borderBlockColor: 'transparent',
    '& .MuiInput-underline:after': {
       borderColor: 'transparent',
    },
