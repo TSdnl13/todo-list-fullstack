@@ -1,0 +1,219 @@
+@keyframes shoFormTask {
+   0% {
+      opacity: 0;
+      transform: translateX(150px);
+   }
+   50% {
+      opacity: 8;
+   }
+   100% {
+      opacity: 1;
+      transform: translateX(0);
+   }
+}
+
+@keyframes arrowLoop {
+   0% {transform: translateY(-15%);}
+   50% {transform: translateY(15%);}
+   100% {transform: translateY(-15%);}
+}
+
+.task-form {
+   max-width: 380px;
+   width: 100%;
+   min-width: 320px;
+   padding: .6rem;
+   background-color: #262b51;
+   z-index: 1000;
+   animation-name: shoFormTask;
+   animation-duration: 1s;
+   animation-timing-function: ease-in;
+   
+   .task-form__close {
+      display: flex;
+      margin-bottom: .5rem;
+      justify-content: flex-end;
+      
+      svg {
+         color: #b9b9bf;
+         font-size: 24px;
+         padding: .3rem;
+         cursor: pointer;
+         
+         &:hover { 
+            background-color: #363e74;
+         }
+      }
+   }
+   
+   .task-form__details {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 1rem;
+      .task {
+         padding: 1.04rem .8rem;
+         min-height: auto;
+      }
+      textarea {
+         outline: none;
+         border: none;
+         color: #E9e9e9;
+         font-size: 14px;
+         background-color: rgba(54, 62, 116, 0.5);
+         padding: 1rem .7rem;
+         resize: none;
+         border-radius: .3rem;
+         
+         &:hover{
+            background-color: rgba(54, 62, 116, 0.8);
+         }
+      }
+      
+   }
+   
+   .task-form__duedate {
+      position: relative;
+      display: flex;
+      background-color: rgba(54, 62, 116, 0.5);
+      border-radius: .3rem;
+   
+      .duedate-text {
+         flex: 1;
+         padding: 1rem .7rem;
+      }
+      .duedate-date-picker {
+         position: absolute;
+         top: 100%;
+      }   
+
+      .clean-duedate {
+         display: flex;
+         align-items: center;
+         font-size: 14px;
+         padding: 0 .8rem;
+         cursor: pointer;
+         transition: all 250ms ease-in-out;
+         border-radius: .3rem;
+         color: #b9b9bf;
+
+         &:hover{
+            background-color: rgba(54, 62, 116, 0.8);
+         }
+      }
+   }
+
+   .duedate-content {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      
+      &:hover {
+         background-color: rgba(54, 62, 116, 0.8);
+      }
+      .calendar-icon {
+         display: flex;
+         align-items: center;
+         border: none;
+         background-color: transparent;
+         padding: 0 .8rem;
+         color: #b9b9bf;
+      }
+   }
+   .animate-arrow {
+      transform: translateY(-15%);
+      font-size: 28px;
+      animation-name: arrowLoop;
+      animation-duration: 1.5s;
+      animation-timing-function: ease;
+      animation-iteration-count: infinite;
+   }
+   
+   .task__details {
+      input {
+         border: none;
+         outline: none;
+         font-size: 18px;
+         letter-spacing: 1px;
+         font-weight: 500;
+         background-color: transparent;
+         color: #E9e9e9;
+      }
+   }
+
+   .update-button{
+      color: #f1f1f1;
+      font-weight: bold;
+      width: 100%;
+      padding: .6rem .1rem;
+      background-color: #E65F2B;
+      border: none;
+      border-radius: .3rem;
+      cursor: pointer;
+
+      &:hover {
+         background-color: #CC4511;
+      }
+   }
+
+   .task-form__footer {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      .box {
+         display: flex;
+         p {
+            padding: 1.04rem .8rem;
+            flex: 1;
+            font-weight: 300;
+            font-size: 14px;
+            text-align: center;
+         }
+         div {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            font-size: 24px;
+            border-radius: .3rem;
+            &:hover {
+               background-color: rgba(54, 62, 116, 0.8);
+            }
+         }
+
+      }
+   }
+
+   @media screen and (max-width: 1080px) {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+   }
+
+   .flex {
+      display: flex;
+   }
+   .flex-col {
+      flex-direction: column;
+   }
+   .justify-between {
+      justify-content: space-between;
+   }
+   .h-full {
+      height: 100%;
+      @media screen and (max-width: 1080px) {
+         height: 94%;
+      }
+   }
+}
+
+.alert-error {
+   padding: .5rem .6rem;
+   background-color: #e23a23;
+   color: #f2f2f2;
+   font-size: 13px;
+   font-weight: 300;
+   border-radius: .3rem;
+}
