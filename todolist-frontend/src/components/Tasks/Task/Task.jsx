@@ -4,6 +4,7 @@ import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import RadioButtonUncheckedTwoToneIcon from '@mui/icons-material/RadioButtonUncheckedTwoTone';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
+import StickyNote2OutlinedIcon from '@mui/icons-material/StickyNote2Outlined';
 import { blue, indigo } from '@mui/material/colors';
 import axios from 'axios';
 import { format } from 'date-fns';
@@ -12,7 +13,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import './Task.scss';
 
-const Task = ({ task, setTasks, tasks }) => {
+const Task = ({ task, setTasks, tasks,  setTaskFormId  }) => {
    const [formData, setFormData] = useState({...task});
 
    const updateTask = async (e) => {
@@ -47,7 +48,7 @@ const Task = ({ task, setTasks, tasks }) => {
     });
 
    return (
-      <div className='task'>
+      <div className='task' onClick={() => setTaskFormId(task.taskId)}>
          <Checkbox
             name='state'
             aria-label='Task state'
@@ -71,12 +72,14 @@ const Task = ({ task, setTasks, tasks }) => {
                   {formData.dueDate && (
                   <span>
                      <ThemeProvider theme={iconTheme}>
-                        <CalendarTodayOutlinedIcon sx={{ color: 'primary.main', fontSize: '12px' }} /> 
+                        <CalendarTodayOutlinedIcon sx={{ color: 'primary.main', fontSize: '13px' }} /> 
                      </ThemeProvider>
                      {format(new Date(formData.dueDate), "eee',' MMM d")}
                   </span>
                   )}
-                  <span>{formData.note || ''}</span>
+                  <ThemeProvider theme={iconTheme}>
+                  <span>{formData.note ? <StickyNote2OutlinedIcon sx={{ color: 'primary.main', fontSize: '14px' }} />: ''}</span>
+                  </ThemeProvider>
                </p>
             )}
          </div>
