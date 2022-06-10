@@ -64,4 +64,31 @@ export const DueDateTextField = styled(TextField)({
    }
 });
 
+export const DateTextField = styled(TextField)({
+   color: '#e8e8e8',
+   borderRadius: '.3rem',
+   backgroundColor: 'transparent',
+   '&:hover': {
+      backgroundColor: 'rgba(54, 62, 116, 0.8)'
+   },
+   borderBlockColor: 'transparent',
+   '& .MuiInput-underline:after': {
+      borderColor: 'transparent',
+   },
+   '& .MuiInputAdornment-root': {
+      height: '100%'
+   },
+   '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+         borderColor: 'transparent',
+      },
+      '&:hover fieldset': {
+         borderColor: 'transparent',
+      },
+      '&.Mui-focused fieldset': {
+         borderColor: 'transparent',
+      },
+   }
+});
+
 
