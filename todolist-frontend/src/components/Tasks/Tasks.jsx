@@ -124,7 +124,9 @@ const Tasks = ({ tasks, setTasks, taskListId }) => {
          {taskFormId !== 0 && (
             <TaskForm 
                setTaskFormId={setTaskFormId}
-               task={tasks.tasks.find(tsk => tsk.taskId === taskFormId)} 
+               task={tasks.tasks.find(tsk => tsk.taskId === taskFormId)}
+               setTasks={setTasks} 
+               tasks={tasks}
             />
          )}
       </div>
