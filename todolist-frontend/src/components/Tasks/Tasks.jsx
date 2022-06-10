@@ -13,15 +13,17 @@ import { format, isValid } from 'date-fns';
 import './Tasks.scss';
 import { DueDateTextField } from '../Inputs/Inputs';
 import Task from './Task/Task';
+import TaskForm from './TaskForm/TaskForm';
 
 const Tasks = ({ tasks, setTasks, taskListId }) => {
    const initialTaskState = {name: '', state: false, createdAt: '', taskListId: taskListId, dueDate: ''};
    const completedTasks = tasks.tasks?.filter(task => task.state === true);
    const pendingTasks = tasks.tasks?.filter(task => task.state === false);
    const navbar = document.getElementById('navbar');
-   const [showCompletedTasks, setShowCompletedTasks] = useState(true);
+   const [showCompletedTasks, setShowCompletedTasks] = useState(false);
    const [taskData, setTaskData] = useState(initialTaskState);
-
+   const [taskFormId, setTaskFormId] = useState(0);
+   
    const darkDatePicker = createTheme({
       palette: {
          mode: 'dark',
@@ -55,67 +57,76 @@ const Tasks = ({ tasks, setTasks, taskListId }) => {
    return (
       <div className='tasks' style={{ height: `calc(100vh - ${navbar?.offsetHeight}px)`}}>
          <div className='tasks__container'>
-            <h2>{tasks?.taskListName}</h2>
-            {pendingTasks?.length > 0 && (
-               <ul>
-                  {pendingTasks.map(task => (
-                     <li key={task.taskId}>
-                        <Task task={task} setTasks={setTasks} tasks={tasks} />
-                     </li>
-                  ))}
-               </ul>
-            )}
+            <div className='tasks__list'>
+               <h2>{tasks?.taskListName}</h2>
+               {pendingTasks?.length > 0 && (
+                  <ul>
+                     {pendingTasks.map(task => (
+                        <li key={task.taskId}>
+                           <Task task={task} setTasks={setTasks} tasks={tasks} setTaskFormId={setTaskFormId} />
+                        </li>
+                     ))}
+                  </ul>
+               )}
 
-            {completedTasks?.length > 0 && (
-            <div>
-               <div
-                  className='tasks-subtile'
-                  onClick={() => setShowCompletedTasks(prev => !prev) }
-               >
-                  { showCompletedTasks ? (
-                     <KeyboardArrowDownIcon />
-                  ):(
-                     <KeyboardArrowRightIcon />
-                  )}
-                  <p>Completed</p>
-                  <span>{completedTasks.length}</span>
-               </div>
-
-               <ul className={'tasks__completed ' + (showCompletedTasks ? 'show-tasks':'hide-tasks')}>
-                  {completedTasks.map(task => (
-                     <li key={task.taskId}>
-                        <Task task={task} setTasks={setTasks} tasks={tasks}  />
-                     </li>
-                  ))}
-               </ul>
-            </div>
-            )}
-
-         </div>
-
-         <div className='tasks__create-task'>
-            <AddSharpIcon fontSize='small' />
-            <input
-               type='text'
-               placeholder='New Task'
-               onChange={(e) => setTaskData({...taskData, name: e.target.value})}
-               value={taskData.name}
-            />
-            <ThemeProvider theme={darkDatePicker}>
-               <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                     value={taskData.dueDate}
-                     onChange={(newDate) => {
-                        setTaskData({...taskData, dueDate: newDate});
-                     }}
-                     renderInput={(params) => (
-                        <DueDateTextField size='small' {...params} />
+               {completedTasks?.length > 0 && (
+               <div>
+                  <div
+                     className='tasks-subtile'
+                     onClick={() => setShowCompletedTasks(prev => !prev) }
+                  >
+                     { showCompletedTasks ? (
+                        <KeyboardArrowDownIcon />
+                     ):(
+                        <KeyboardArrowRightIcon />
                      )}
-                  />
-               </LocalizationProvider>
-            </ThemeProvider>
-            <button type='button' onClick={createTask} >Create</button>
+                     <p>Completed</p>
+                     <span>{completedTasks.length}</span>
+                  </div>
+
+                  <ul className={'tasks__completed ' + (showCompletedTasks ? 'show-tasks':'hide-tasks')}>
+                     {completedTasks.map(task => (
+                        <li key={task.taskId}>
+                           <Task task={task} setTasks={setTasks} tasks={tasks} setTaskFormId={setTaskFormId} />
+                        </li>
+                     ))}
+                  </ul>
+               </div>
+               )}
+
+            </div>
+
+            <div className='tasks__create-task'>
+               <AddSharpIcon fontSize='small' />
+               <input
+                  type='text'
+                  placeholder='New Task'
+                  onChange={(e) => setTaskData({...taskData, name: e.target.value})}
+                  value={taskData.name}
+               />
+               <ThemeProvider theme={darkDatePicker}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                     <DatePicker
+                        value={taskData.dueDate}
+                        onChange={(newDate) => {
+                           setTaskData({...taskData, dueDate: newDate});
+                        }}
+                        renderInput={(params) => (
+                           <DueDateTextField size='small' {...params} />
+                        )}
+                     />
+                  </LocalizationProvider>
+               </ThemeProvider>
+               <button type='button' onClick={createTask} >Create</button>
+            </div>
          </div>
+
+         {taskFormId !== 0 && (
+            <TaskForm 
+               setTaskFormId={setTaskFormId}
+               task={tasks.tasks.find(tsk => tsk.taskId === taskFormId)} 
+            />
+         )}
       </div>
    )
 }
