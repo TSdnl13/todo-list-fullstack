@@ -21,7 +21,7 @@ import { DateTextField } from '../../Inputs/Inputs';
 
 const TaskForm = ({ task, setTaskFormId, setTasks,  tasks }) => {
    const [formData, setFormData] = useState({...task});
-   const [newDate, setNewDate] = useState(task.dueDate ? new Date(task.dueDate):null);
+   const [newDate, setNewDate] = useState(task.dueDate ? new Date(task.dueDate.concat(' 00:00:00')):null);
    const [showCalendar , setShowCalendar] = React.useState(false);
    const [prevState] = useState(task.state);
 
@@ -51,7 +51,6 @@ const TaskForm = ({ task, setTaskFormId, setTasks,  tasks }) => {
       axios.put(url, {...putData, dueDate: newDate ? format(newDate, 'yyyy-MM-dd') : null})
          .then(response => {
             const updatedTask = response.data;
-            console.log(response.data);
             const filteredTask = tasks.tasks.filter(tsk => tsk.taskId !== updatedTask.taskId );
             setTasks({...tasks, tasks: [...filteredTask, updatedTask]});
             setTaskFormId(0);
@@ -60,9 +59,6 @@ const TaskForm = ({ task, setTaskFormId, setTasks,  tasks }) => {
             console.log(error);
          });
    }
-
-   console.log(task);
-   console.log(newDate);
 
    return (
       <div className='task-form'>
@@ -122,7 +118,7 @@ const TaskForm = ({ task, setTaskFormId, setTasks,  tasks }) => {
                      }} 
                   >
                      <div className='duedate-text'>
-                        {newDate ? ('Due ' + format(newDate, "ccc',' MMM d ','y")): 'Add due date'}
+                        {newDate ? ('Due ' + format(newDate, "ccc',' MMM d',' y")): 'Add due date'}
                      </div>
 
                      <div className='calendar-icon'>
