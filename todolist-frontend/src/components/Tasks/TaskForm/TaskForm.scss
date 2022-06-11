@@ -26,9 +26,12 @@
    background-color: #262b51;
    z-index: 1000;
    animation-name: shoFormTask;
-   animation-duration: 1s;
+   animation-duration: 750ms;
    animation-timing-function: ease-in;
    
+   border-left: 1px solid rgba(0, 0, 0, 0.45);
+   box-shadow: -6px 0 16px 12px rgba(0, 0, 0, 0.25);
+
    .task-form__close {
       display: flex;
       margin-bottom: .5rem;
