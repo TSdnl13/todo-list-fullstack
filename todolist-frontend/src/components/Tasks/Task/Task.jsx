@@ -74,7 +74,7 @@ const Task = ({ task, setTasks, tasks,  setTaskFormId  }) => {
                      <ThemeProvider theme={iconTheme}>
                         <CalendarTodayOutlinedIcon sx={{ color: 'primary.main', fontSize: '13px' }} /> 
                      </ThemeProvider>
-                     {format(new Date(formData.dueDate), "eee',' MMM d")}
+                     {format(new Date(formData.dueDate.concat(' 00:00:00')), "eee',' MMM d")}
                   </span>
                   )}
                   <ThemeProvider theme={iconTheme}>
