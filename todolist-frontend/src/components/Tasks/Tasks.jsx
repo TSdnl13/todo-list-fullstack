@@ -122,12 +122,15 @@ const Tasks = ({ tasks, setTasks, taskListId }) => {
          </div>
 
          {taskFormId !== 0 && (
+            <>
             <TaskForm 
                setTaskFormId={setTaskFormId}
                task={tasks.tasks.find(tsk => tsk.taskId === taskFormId)}
                setTasks={setTasks} 
                tasks={tasks}
-            />
+               />
+            <div className='overlay__taskform' onClick={() => setTaskFormId(0)} />
+            </>
          )}
       </div>
    )
