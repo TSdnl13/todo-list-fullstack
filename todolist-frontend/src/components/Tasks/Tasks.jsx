@@ -55,6 +55,7 @@ const Tasks = ({ tasks, setTasks, taskListId }) => {
    }
 
    return (
+      <>
       <div className='tasks' style={{ height: `calc(100vh - ${navbar?.offsetHeight}px)`}}>
          <div className='tasks__container'>
             <div className='tasks__list'>
@@ -121,6 +122,7 @@ const Tasks = ({ tasks, setTasks, taskListId }) => {
             </div>
          </div>
 
+         </div>
          {taskFormId !== 0 && (
             <>
             <TaskForm 
@@ -128,11 +130,11 @@ const Tasks = ({ tasks, setTasks, taskListId }) => {
                task={tasks.tasks.find(tsk => tsk.taskId === taskFormId)}
                setTasks={setTasks} 
                tasks={tasks}
-               />
+            />
             <div className='overlay__taskform' onClick={() => setTaskFormId(0)} />
             </>
          )}
-      </div>
+      </>
    )
 }
 
