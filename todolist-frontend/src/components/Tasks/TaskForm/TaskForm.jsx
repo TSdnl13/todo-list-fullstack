@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import Checkbox from '@mui/material/Checkbox';
+import { Checkbox, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import RadioButtonUncheckedTwoToneIcon from '@mui/icons-material/RadioButtonUncheckedTwoTone';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
@@ -21,14 +21,22 @@ import { DateTextField } from '../../Inputs/Inputs';
 
 const TaskForm = ({ task, setTaskFormId, setTasks,  tasks }) => {
    const [formData, setFormData] = useState({...task});
-   const [newDate, setNewDate] = useState(task.dueDate ? new Date(task.dueDate.concat(' 00:00:00')):null);
+   const [newDate, setNewDate] = useState(task?.dueDate ? new Date(task.dueDate.concat(' 00:00:00')):null);
    const [showCalendar , setShowCalendar] = React.useState(false);
-   const [prevState] = useState(task.state);
+   const [prevState] = useState(task?.state);
+   const [openAlert, setOpenAlert] = useState(false);
 
-   const darkDatePicker = createTheme({
+   const dark = createTheme({
       palette: {
          mode: 'dark',
-         error: {main: '#292f58'}
+         primary: {
+            main: "#262b51",
+            light: '#363e74'
+         },
+         secondary: {
+            main: '#E65F2B'
+         },
+         error: {main: '#e23a23'}
       }
    });
 
@@ -60,12 +68,31 @@ const TaskForm = ({ task, setTaskFormId, setTasks,  tasks }) => {
          });
    }
 
+   const deleteTask = () => {
+      const url = `http://localhost:8080/api/task/delete/${task?.taskId}`;
+      axios.delete(url)
+      .then(response => {
+         const deletedTaskId = task?.taskId;
+         const filteredTask = tasks.tasks.filter(tsk => tsk.taskId !== deletedTaskId );
+         setTasks({...tasks, tasks: [...filteredTask]});
+         setTaskFormId(0);
+      })
+      .catch(error => {
+         console.log(error);
+      })
+      .then( setOpenAlert(false) );
+   }
+   
+   const closeAlert = () => {
+      setOpenAlert(false);
+   };
+
    return (
       <div className='task-form'>
          <div className='task-form__close'>
             <CloseOutlinedIcon onClick={() => setTaskFormId(0)} />
          </div>
-         <div className='flex flex-col justify-between h-full'>
+         <div className='flex flex-col justify-between flex-1'>
             <div className='task-form__details'>
                <div className='task' >
                   <Checkbox
@@ -128,7 +155,7 @@ const TaskForm = ({ task, setTaskFormId, setTasks,  tasks }) => {
 
                   {showCalendar && (
                   <div className='duedate-date-picker'>
-                     <ThemeProvider theme={darkDatePicker}>
+                     <ThemeProvider theme={dark}>
                      <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <StaticDatePicker
                            displayStaticWrapperAs="desktop"
@@ -162,12 +189,34 @@ const TaskForm = ({ task, setTaskFormId, setTasks,  tasks }) => {
                <button type='button' className='update-button' onClick={handleUpdate}>Save Changes</button>
                <div className='box'>
                   <p>{formData.state ? 'Completed on': 'Created on'} {format(new Date(formData.createdAt), "eee',' MMM d',' y")}</p>
-                  <div>
+                  <div onClick={() => setOpenAlert(true)}>
                      <DeleteOutlinedIcon sx={{color: '#b9b9b9'}} />
                   </div>
                </div>
             </div>
          </div>
+         
+         <ThemeProvider theme={dark}>
+         <Dialog
+            open={openAlert}
+            onClose={closeAlert}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            >
+            <DialogTitle id="alert-dialog-title">
+               {"are you sure to delete this task?"}
+            </DialogTitle>
+            <DialogContent>
+               <DialogContentText id="alert-dialog-description">
+                  {formData.name}
+               </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+               <Button onClick={closeAlert} color='secondary' variant='contained'>Disagree</Button>
+               <Button onClick={deleteTask} color='error' variant='contained' autoFocus>Agree</Button>
+            </DialogActions>
+         </Dialog>
+         </ThemeProvider>
 
       </div>
    )
