@@ -62,6 +62,7 @@ const Task = ({ task, setTasks, tasks,  setTaskFormId  }) => {
                padding: '0'
             }}
             checked={formData.state}
+            onClick={e => e.stopPropagation()}
             onChange={(e) => updateTask(e)}
          />
 
@@ -96,6 +97,7 @@ const Task = ({ task, setTasks, tasks,  setTaskFormId  }) => {
                },
                padding: '0'
             }}
+            onClick={e => e.stopPropagation()}
             checked={formData.important}
             onChange={(e) => updateTask(e)}
          />
