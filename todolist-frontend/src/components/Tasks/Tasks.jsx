@@ -13,6 +13,7 @@ import './Tasks.scss';
 import { DueDateTextField } from '../Inputs/Inputs';
 import Task from './Task/Task';
 import TaskForm from './TaskForm/TaskForm';
+import { IMPORTANT, PLANNED } from '../../constants/taskListId';
 
 var  completedTasks = [], pendingTasks = [];
 
@@ -38,10 +39,10 @@ const Tasks = ({ tasks, setTasks, taskListId }) => {
    useEffect(() => {
       completedTasks = tasks.tasks?.filter(task => task.state === true);
       pendingTasks = tasks.tasks?.filter(task => task.state === false);
-      if (taskListId === 0) {
+      if (taskListId === IMPORTANT) {
          completedTasks = completedTasks.filter(task => task.important === true);
          pendingTasks = pendingTasks.filter(task => task.important === true);
-      } else if (taskListId === -1) {
+      } else if (taskListId === PLANNED) {
          completedTasks = completedTasks.filter(task => task.dueDate !== null);
          pendingTasks = pendingTasks.filter(task => task.dueDate !== null);
       }

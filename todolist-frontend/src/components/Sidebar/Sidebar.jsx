@@ -6,10 +6,10 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import DensityMediumOutlinedIcon from '@mui/icons-material/DensityMediumOutlined';
 
 import './Sidebar.scss';
+import { IMPORTANT, PLANNED } from '../../constants/taskListId';
 
 const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId }) => {
 
-   
    const findImportantTasks = () => {
       const importantTasks = [];
       taskLists.forEach(taskList => {
@@ -34,20 +34,20 @@ const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId }
          <div className='sidebar__menu'>
             <ul>
                <li 
-                  className={taskListId === 0 ? 'sidebar-container active': 'sidebar-container'} 
+                  className={taskListId === IMPORTANT ? 'sidebar-container active': 'sidebar-container'} 
                   onClick={() => {
                      setTasks({ taskListName: 'Importants', tasks: findImportantTasks() });
-                     setTaskListId(0);
+                     setTaskListId(IMPORTANT);
                   }}
                >
                   <GradeOutlinedIcon fontSize='small' />
                   <p>Important</p>
                </li>
                <li 
-                  className={taskListId === -1 ? 'sidebar-container active': 'sidebar-container'} 
+                  className={taskListId === PLANNED ? 'sidebar-container active': 'sidebar-container'} 
                   onClick={() => {
                      setTasks({ taskListName: 'Planed', tasks: findPlanedTasks() });
-                     setTaskListId(-1);
+                     setTaskListId(PLANNED);
                   }}
                >
                   <CalendarMonthOutlinedIcon fontSize='small' />
