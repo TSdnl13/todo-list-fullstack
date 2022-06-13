@@ -202,7 +202,7 @@ const TaskForm = ({ task, setTaskFormId, setTasks,  tasks }) => {
             onClose={closeAlert}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
-            >
+         >
             <DialogTitle id="alert-dialog-title">
                {"are you sure to delete this task?"}
             </DialogTitle>
