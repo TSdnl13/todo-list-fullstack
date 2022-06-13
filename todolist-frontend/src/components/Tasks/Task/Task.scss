@@ -20,10 +20,21 @@
          display: flex;
          gap: 8px;
          
+         .date-expired {
+            color: #ff5646;
+            svg {
+               color: #ff5646;
+            }
+         }
+
          span {
             display: flex;
             align-items: center;
             gap: 5px;
+
+            svg {
+               color: #dadada
+            }
          }
       }
    }
