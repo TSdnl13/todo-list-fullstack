@@ -13,6 +13,8 @@ const Dashboard = () => {
    const [taskLists, setTaskLists] = useState([]);
    const [taskListId, setTaskListId] = useState(0);
    
+   const [tasks, setTasks] = useState({taskListName: '', tasks: []});
+
    useEffect(() => {
       axios.get(`http://localhost:8080/api/taskList/user?id=${user?.userId}`)
          .then((response) => {
@@ -26,9 +28,14 @@ const Dashboard = () => {
          });
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [taskListId]);
+   }, [taskListId, tasks]);
    
-   const [tasks, setTasks] = useState({taskListName: 'Important', tasks: importantTasks});
+   useEffect(() => {
+      if (taskListId === 0){ 
+         setTasks({taskListName: 'Important', tasks: importantTasks})
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, []);
 
    return (
       <div className='dashboard'>
