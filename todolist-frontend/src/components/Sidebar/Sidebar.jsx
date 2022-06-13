@@ -1,14 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import DensityMediumOutlinedIcon from '@mui/icons-material/DensityMediumOutlined';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import './Sidebar.scss';
 import { IMPORTANT, PLANNED } from '../../constants/taskListId';
+import axios from 'axios';
 
-const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId }) => {
+const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId, user }) => {
+
+   const [openFormList, setOpenFormList] = useState(false);
+   const [taskListName, setTaskListName] = useState('');
+
+   const dark = createTheme({
+      palette: {
+         mode: 'dark',
+         primary: {
+            main: "#454f94",
+         },
+         secondary: {
+            main: '#E65F2B'
+         },
+         error: {main: '#e23a23'},
+         background: {
+            default: '#1b1f3a',
+            paper: '#2a305a'
+         }
+      }
+   });  
 
    const findImportantTasks = () => {
       const importantTasks = [];
@@ -26,6 +49,24 @@ const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId }
          planned.forEach(imp => plannedTasks.push(imp));
       });
       return plannedTasks;
+   }
+
+   const createNewTaskList = () => {
+      axios.post('http://localhost:8080/api/taskList', { name: taskListName, userId: user?.userId })
+         .then(response => {
+            setTaskLists(prev => [...prev, response.data]);
+         })
+         .catch(error => {
+            console.log(error);
+         })
+         .then(() => {
+            setTaskListName('');
+            setOpenFormList(false)
+         });
+   }
+
+   const handleFormListClose = () => {
+      setOpenFormList(false);
    }
 
    return (
@@ -72,17 +113,46 @@ const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId }
                   >
                      <DensityMediumOutlinedIcon  fontSize='small' />
                      <p>{taskList.name}</p>
-                     {taskList?.tasks.length > 0 && 
+                     {taskList?.tasks?.length > 0 && 
                      (<span>{taskList.tasks?.filter(task => task.state === false).length}</span>)}
                   </li>
                ))}
             </ul>         
          </div>
          <div className='sidebar__create-tasklist'>
-            <button type='button'>
+            <button type='button' onClick={() => setOpenFormList(true)}>
                <AddSharpIcon fontSize='small' /> New List
             </button>
          </div>
+
+         <ThemeProvider theme={dark}>
+         <Dialog
+            open={openFormList}
+            onClose={handleFormListClose}
+            fullWidth
+            color='primary'
+         >
+            <DialogTitle>Create new Task List</DialogTitle>
+            <DialogContent>
+               <TextField
+                  autoFocus
+                  margin="dense"
+                  id="name"
+                  label="Task List Name"
+                  type="text"
+                  fullWidth
+                  color='secondary'
+                  variant='standard'
+                  value={taskListName}
+                  onChange={(e) => setTaskListName(e.target.value)}
+               />
+            </DialogContent>
+            <DialogActions>
+               <Button onClick={handleFormListClose} color='secondary' variant='contained' >Cancel</Button>
+               <Button onClick={createNewTaskList} color='primary' variant='contained'>Create</Button>
+            </DialogActions>
+         </Dialog>
+         </ThemeProvider>
       </div>
    )
 }
