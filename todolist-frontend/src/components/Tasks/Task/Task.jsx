@@ -7,14 +7,13 @@ import GradeIcon from '@mui/icons-material/Grade';
 import StickyNote2OutlinedIcon from '@mui/icons-material/StickyNote2Outlined';
 import { blue, indigo } from '@mui/material/colors';
 import axios from 'axios';
-import { format } from 'date-fns';
+import { format, isBefore } from 'date-fns';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import './Task.scss';
 
 const Task = ({ task, setTasks, tasks,  setTaskFormId  }) => {
-   const [formData, setFormData] = useState({...task});
+   const [formData, setFormData] = useState({...task });
 
    const updateTask = async (e) => {
       const url = `http://localhost:8080/api/task/${formData.taskId}`;
@@ -39,13 +38,6 @@ const Task = ({ task, setTasks, tasks,  setTaskFormId  }) => {
          });
    }
 
-   const iconTheme = createTheme({
-      palette: {
-         primary: {
-            main: '#dadada',
-         },
-      },
-    });
 
    return (
       <div className='task' onClick={() => setTaskFormId(task.taskId)}>
@@ -68,20 +60,17 @@ const Task = ({ task, setTasks, tasks,  setTaskFormId  }) => {
 
          <div className='task__details'>
             <p>{formData.name}</p>
+
             {(formData.dueDate || formData.note) && (
-               <p className='task__details-more-info'>
-                  {formData.dueDate && (
-                  <span>
-                     <ThemeProvider theme={iconTheme}>
-                        <CalendarTodayOutlinedIcon sx={{ color: 'primary.main', fontSize: '13px' }} /> 
-                     </ThemeProvider>
-                     {format(new Date(formData.dueDate.concat(' 00:00:00')), "eee',' MMM d")}
-                  </span>
-                  )}
-                  <ThemeProvider theme={iconTheme}>
-                  <span>{formData.note ? <StickyNote2OutlinedIcon sx={{ color: 'primary.main', fontSize: '14px' }} />: ''}</span>
-                  </ThemeProvider>
-               </p>
+            <p className='task__details-more-info'>
+               {formData.dueDate && (
+               <span className={isBefore(new Date(formData.dueDate.concat(' 00:00:00')), new Date()) && formData.state === false ? 'date-expired':''}>
+                  <CalendarTodayOutlinedIcon sx={{ color: 'primary.main', fontSize: '13px' }} /> 
+                  {format(new Date(formData.dueDate.concat(' 00:00:00')), "eee',' MMM d")}
+               </span>
+               )}
+               <span>{formData.note ? <StickyNote2OutlinedIcon sx={{ color: 'primary.main', fontSize: '14px' }} />: ''}</span>
+            </p>
             )}
          </div>
 
