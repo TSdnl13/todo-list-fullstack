@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import RadioButtonUncheckedTwoToneIcon from '@mui/icons-material/RadioButtonUncheckedTwoTone';
@@ -12,8 +12,20 @@ import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined
 
 import './Task.scss';
 
+const initialState = {
+   completedAt: null, 
+   createdAt: "",
+   dueDate: null,
+   important: false,
+   name: "",
+   note: "",
+   state: false,
+   taskId: 0,
+   taskListId: 0
+}
+
 const Task = ({ task, setTasks, tasks,  setTaskFormId  }) => {
-   const [formData, setFormData] = useState({...task });
+   const [formData, setFormData] = useState(initialState);
 
    const updateTask = async (e) => {
       const url = `http://localhost:8080/api/task/${formData.taskId}`;
@@ -38,6 +50,9 @@ const Task = ({ task, setTasks, tasks,  setTaskFormId  }) => {
          });
    }
 
+   useEffect(() => {
+      setFormData({...task});
+   }, [task]);
 
    return (
       <div className='task' onClick={() => setTaskFormId(task.taskId)}>
