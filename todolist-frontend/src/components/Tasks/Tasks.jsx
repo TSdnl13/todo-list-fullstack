@@ -15,10 +15,10 @@ import { DueDateTextField } from '../Inputs/Inputs';
 import Task from './Task/Task';
 import TaskForm from './TaskForm/TaskForm';
 
+var  completedTasks = [], pendingTasks = [];
+
 const Tasks = ({ tasks, setTasks, taskListId }) => {
    const initialTaskState = {name: '', state: false, createdAt: '', taskListId: taskListId, dueDate: ''};
-   const completedTasks = tasks.tasks?.filter(task => task.state === true);
-   const pendingTasks = tasks.tasks?.filter(task => task.state === false);
    const navbar = document.getElementById('navbar');
    const [showCompletedTasks, setShowCompletedTasks] = useState(false);
    const [taskData, setTaskData] = useState(initialTaskState);
@@ -36,6 +36,15 @@ const Tasks = ({ tasks, setTasks, taskListId }) => {
    // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [taskListId]);
    
+   useEffect(() => {
+      completedTasks = tasks.tasks?.filter(task => task.state === true);
+      pendingTasks = tasks.tasks?.filter(task => task.state === false);
+      if (taskListId === 0) {
+         completedTasks = completedTasks.filter(task => task.important === true);
+         pendingTasks = pendingTasks.filter(task => task.important === true);
+      }
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [tasks]);
 
    const createTask = () => {
       let postData = {};
