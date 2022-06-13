@@ -9,7 +9,6 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import axios from 'axios';
 import { format, isValid } from 'date-fns';
 
-
 import './Tasks.scss';
 import { DueDateTextField } from '../Inputs/Inputs';
 import Task from './Task/Task';
@@ -42,6 +41,9 @@ const Tasks = ({ tasks, setTasks, taskListId }) => {
       if (taskListId === 0) {
          completedTasks = completedTasks.filter(task => task.important === true);
          pendingTasks = pendingTasks.filter(task => task.important === true);
+      } else if (taskListId === -1) {
+         completedTasks = completedTasks.filter(task => task.dueDate !== null);
+         pendingTasks = pendingTasks.filter(task => task.dueDate !== null);
       }
    // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [tasks]);
