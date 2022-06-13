@@ -20,7 +20,12 @@ const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId }
    }
 
    const findPlanedTasks = () => {
-      
+      const plannedTasks = [];
+      taskLists.forEach(taskList => {
+         const planned = taskList?.tasks?.filter(task => task.dueDate !== null);
+         planned.forEach(imp => plannedTasks.push(imp));
+      });
+      return plannedTasks;
    }
 
    return (
