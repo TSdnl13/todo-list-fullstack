@@ -45,6 +45,7 @@ const Dashboard = () => {
             setTasks={setTasks}
             setTaskListId={setTaskListId} 
             taskListId={taskListId}
+            user={user}
          />
          <div className='dashboard__panel'>
             <Navbar user={user} />
