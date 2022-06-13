@@ -11,7 +11,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { format } from 'date-fns';
+import { format, isBefore } from 'date-fns';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
 import axios from 'axios';
@@ -139,7 +139,7 @@ const TaskForm = ({ task, setTaskFormId, setTasks,  tasks }) => {
 
                <div className='task-form__duedate'>
                   <div
-                     className='duedate-content'
+                     className={'duedate-content '  + (isBefore(newDate, new Date()) ? 'date-expired': '')}
                      onClick={() => {
                         setShowCalendar(prev => !prev);
                      }} 

@@ -130,6 +130,13 @@
          padding: 0 .8rem;
          color: #b9b9bf;
       }
+
+      &.date-expired {
+         color: #ff5646;
+         svg {
+            color: #ff5646;
+         }
+      }
    }
    .animate-arrow {
       transform: translateY(-15%);
