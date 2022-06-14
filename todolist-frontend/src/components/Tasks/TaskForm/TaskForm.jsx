@@ -36,7 +36,11 @@ const TaskForm = ({ task, setTaskFormId, setTasks,  tasks }) => {
          secondary: {
             main: '#E65F2B'
          },
-         error: {main: '#e23a23'}
+         error: {main: '#e23a23'},
+         background: {
+            default: '#1b1f3a',
+            paper: '#1b1f3a'
+         }
       }
    });
 
@@ -204,7 +208,7 @@ const TaskForm = ({ task, setTaskFormId, setTasks,  tasks }) => {
             aria-describedby="alert-dialog-description"
          >
             <DialogTitle id="alert-dialog-title">
-               {"are you sure to delete this task?"}
+               {"Are you sure you want to delete this task?"}
             </DialogTitle>
             <DialogContent>
                <DialogContentText id="alert-dialog-description">
