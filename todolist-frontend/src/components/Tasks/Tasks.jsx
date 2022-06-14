@@ -8,6 +8,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import axios from 'axios';
 import { format, isValid } from 'date-fns';
+import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 
 import './Tasks.scss';
 import { DueDateTextField } from '../Inputs/Inputs';
@@ -23,6 +24,7 @@ const Tasks = ({ tasks, setTasks, taskListId }) => {
    const [showCompletedTasks, setShowCompletedTasks] = useState(false);
    const [taskData, setTaskData] = useState(initialTaskState);
    const [taskFormId, setTaskFormId] = useState(0);
+   const [isMoreClicked, setIsMoreClicked] = useState(false);
    
    const darkDatePicker = createTheme({
       palette: {
@@ -66,12 +68,31 @@ const Tasks = ({ tasks, setTasks, taskListId }) => {
       });
    }
 
+   const deleteTaskList = () => {
+      console.log("delete");
+   }
+
    return (
       <>
       <div className='tasks' style={{ height: `calc(100vh - ${navbar?.offsetHeight}px)`}}>
          <div className='tasks__container'>
             <div className='tasks__list'>
-               <h2>{tasks?.taskListName}</h2>
+               <div className='tasks__list-tittle'>
+                  <h2>{tasks?.taskListName}</h2>
+                  <div className='more-button'>
+                     <div className='more-button-icon' onClick={() => setIsMoreClicked(prev => !prev)}>
+                        <MoreHorizOutlinedIcon/>
+                     </div>
+                     { isMoreClicked && (
+                        <div className='tasklist__menu'>
+                        <p>Edit name</p>
+                        <p onClick={deleteTaskList}>Delete task list</p>
+                     </div>
+                     )}
+                  </div>
+                  {isMoreClicked && <span className='overlay__more-icon' onClick={() => setIsMoreClicked(false)}></span>}
+               </div>
+
                {pendingTasks?.length > 0 && (
                   <ul>
                      {pendingTasks.map(task => (
