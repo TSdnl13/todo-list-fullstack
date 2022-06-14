@@ -9,6 +9,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import axios from 'axios';
 import { format, isValid } from 'date-fns';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+
 
 import './Tasks.scss';
 import { DueDateTextField } from '../Inputs/Inputs';
@@ -18,18 +20,41 @@ import { IMPORTANT, PLANNED } from '../../constants/taskListId';
 
 var  completedTasks = [], pendingTasks = [];
 
-const Tasks = ({ tasks, setTasks, taskListId }) => {
+const Tasks = ({ tasks, setTasks, taskListId, setTaskListId }) => {
    const initialTaskState = {name: '', state: false, createdAt: '', taskListId: taskListId, dueDate: ''};
    const navbar = document.getElementById('navbar');
    const [showCompletedTasks, setShowCompletedTasks] = useState(false);
    const [taskData, setTaskData] = useState(initialTaskState);
    const [taskFormId, setTaskFormId] = useState(0);
    const [isMoreClicked, setIsMoreClicked] = useState(false);
+   const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
    
    const darkDatePicker = createTheme({
       palette: {
          mode: 'dark',
-         error: {main: '#292f58'}
+         error: {main: '#292f58'},
+         background: {
+            default: '#1b1f3a',
+            paper: '#292f57'
+         }
+      }
+   });
+
+   const dark = createTheme({
+      palette: {
+         mode: 'dark',
+         primary: {
+            main: "#454f94",
+            light: '#363e74'
+         },
+         secondary: {
+            main: '#E65F2B'
+         },
+         error: {main: '#e23a23'},
+         background: {
+            default: '#1b1f3a',
+            paper: '#292f57'
+         }
       }
    });
    
@@ -49,7 +74,7 @@ const Tasks = ({ tasks, setTasks, taskListId }) => {
          pendingTasks = pendingTasks.filter(task => task.dueDate !== null);
       }
    // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [tasks]);
+   }, [tasks, setTaskListId]);
 
    const createTask = () => {
       let postData = {};
@@ -69,8 +94,22 @@ const Tasks = ({ tasks, setTasks, taskListId }) => {
    }
 
    const deleteTaskList = () => {
-      console.log("delete");
+      axios.delete(`http://localhost:8080/api/taskList/delete/${taskListId}`)
+         .then(response => {
+            setTaskListId(0);
+            setTasks({taskListName: '', tasks: []});
+         })
+         .catch(error => {
+            console.log(error);
+         }).then( () => {
+            setOpenDeleteAlert(false);
+            setIsMoreClicked(false);
+         });
    }
+
+   const closeAlert = () => {
+      setOpenDeleteAlert(false);
+   };
 
    return (
       <>
@@ -79,18 +118,22 @@ const Tasks = ({ tasks, setTasks, taskListId }) => {
             <div className='tasks__list'>
                <div className='tasks__list-tittle'>
                   <h2>{tasks?.taskListName}</h2>
+                  {(taskListId !== 0 && taskListId !== -1) && (
+                  <>
                   <div className='more-button'>
                      <div className='more-button-icon' onClick={() => setIsMoreClicked(prev => !prev)}>
                         <MoreHorizOutlinedIcon/>
                      </div>
                      { isMoreClicked && (
                         <div className='tasklist__menu'>
-                        <p>Edit name</p>
-                        <p onClick={deleteTaskList}>Delete task list</p>
+                        <p onClick={() => {}}>Edit name</p>
+                        <p onClick={() => setOpenDeleteAlert(true)}>Delete task list</p>
                      </div>
                      )}
                   </div>
                   {isMoreClicked && <span className='overlay__more-icon' onClick={() => setIsMoreClicked(false)}></span>}
+                  </>
+                  )}
                </div>
 
                {pendingTasks?.length > 0 && (
@@ -154,19 +197,41 @@ const Tasks = ({ tasks, setTasks, taskListId }) => {
                <button type='button' onClick={createTask} >Create</button>
             </div>
          </div>
+      </div>
 
-         </div>
-         {taskFormId !== 0 && (
-            <>
-            <TaskForm 
-               setTaskFormId={setTaskFormId}
-               task={tasks.tasks.find(tsk => tsk.taskId === taskFormId)}
-               setTasks={setTasks} 
-               tasks={tasks}
-            />
-            <div className='overlay__taskform' onClick={() => setTaskFormId(0)} />
-            </>
-         )}
+      {taskFormId !== 0 && (
+         <>
+         <TaskForm 
+            setTaskFormId={setTaskFormId}
+            task={tasks.tasks.find(tsk => tsk.taskId === taskFormId)}
+            setTasks={setTasks} 
+            tasks={tasks}
+         />
+         <div className='overlay__taskform' onClick={() => setTaskFormId(0)} />
+         </>
+      )}
+
+      <ThemeProvider theme={dark}>
+         <Dialog
+            open={openDeleteAlert}
+            onClose={closeAlert}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+         >
+            <DialogTitle id="alert-dialog-title">
+               {"Are you sure you want to delete this TaskList and all its tasks?"}
+            </DialogTitle>
+            <DialogContent>
+               <DialogContentText id="alert-dialog-description">
+                  {tasks?.taskListName}
+               </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+               <Button onClick={closeAlert} color='secondary' variant='contained'>Disagree</Button>
+               <Button onClick={deleteTaskList} color='error' variant='contained' autoFocus>Agree</Button>
+            </DialogActions>
+         </Dialog>
+      </ThemeProvider>
       </>
    )
 }
