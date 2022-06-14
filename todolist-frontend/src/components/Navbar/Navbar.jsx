@@ -37,6 +37,7 @@ const Navbar = ({ user }) => {
             </div>
             )}
          </div>
+         {isArrowUp && <span className='overlay__more-icon' onClick={() => setIsArrowUp(false)}></span>}
       </nav>
    )
 }
