@@ -28,7 +28,7 @@ const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId, 
          error: {main: '#e23a23'},
          background: {
             default: '#1b1f3a',
-            paper: '#2a305a'
+            paper: '#292f57'
          }
       }
    });  
