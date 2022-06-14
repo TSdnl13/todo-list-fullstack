@@ -1,7 +1,6 @@
 .tasks {
-   padding: 50px;
+   padding: 30px 40px;
    display: flex;
-   position: relative;
    gap: 5px;
    overflow: hidden;
 }
@@ -25,9 +24,77 @@
       border-radius: 0.2rem;
    }
 
+   .tasks__list-tittle {
+      display: flex;
+      justify-content: space-between;
+      padding: .3rem .2rem;
+      align-items: center;
+      margin-bottom: 1rem;
+   }
+
+   .more-button {
+      position: relative;
+      .more-button-icon {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         padding: 6px;
+         border-radius: 50%;
+         cursor: pointer;
+         transition: all 250ms ease-in;
+
+         &:active {
+            transform: scale(1.1);
+         }
+         &:hover {
+            background-color: rgba(54, 62, 116, 0.8);
+         }
+      }
+   }
+
+   .tasklist__menu {
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 120%;
+      right: 20%;
+      border-radius: 8px;
+      padding: 4px;
+      background-color: #292f57;
+      z-index: 500;
+      letter-spacing: 1px;
+      min-width: 150px;
+      border: 1px solid rgba(0, 0, 0, 0.45);
+      box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.35);
+      
+      span {
+         font-weight: 200;
+         font-style: italic;
+         color: #d0d0e0;
+         text-align: center;
+         padding: 8px;
+      }
+
+      p {
+         margin: 0;
+         display: flex;
+         align-items: center;
+         gap: 8px;
+         padding: 10px;
+         border-radius: 4px;
+         cursor: pointer;
+
+         &:hover {
+            background-color: #363e74;
+         }
+      }
+   }
+
    h2 {
       font-size: 28px;
       font-weight: 400;
+      margin: 0;
    }
    .tasks-subtile {
       font-size: 15px;
@@ -150,4 +217,13 @@ h2 {
    left: 0;
    right: 0;
    bottom: 0;
+}
+
+.overlay__more-icon {
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   z-index: 10;
 }
