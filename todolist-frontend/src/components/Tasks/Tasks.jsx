@@ -9,7 +9,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import axios from 'axios';
 import { format, isValid } from 'date-fns';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 
 
 import './Tasks.scss';
@@ -20,7 +20,7 @@ import { IMPORTANT, PLANNED } from '../../constants/taskListId';
 
 var  completedTasks = [], pendingTasks = [];
 
-const Tasks = ({ tasks, setTasks, taskListId, setTaskListId }) => {
+const Tasks = ({ tasks, setTasks, taskListId, setTaskListId, user }) => {
    const initialTaskState = {name: '', state: false, createdAt: '', taskListId: taskListId, dueDate: ''};
    const navbar = document.getElementById('navbar');
    const [showCompletedTasks, setShowCompletedTasks] = useState(false);
@@ -28,6 +28,8 @@ const Tasks = ({ tasks, setTasks, taskListId, setTaskListId }) => {
    const [taskFormId, setTaskFormId] = useState(0);
    const [isMoreClicked, setIsMoreClicked] = useState(false);
    const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
+   const [openEditAlert, setOpenEditAlert] = useState(false);
+   const [taskListName, setTaskListName] = useState(tasks?.taskListName);
    
    const darkDatePicker = createTheme({
       palette: {
@@ -107,8 +109,22 @@ const Tasks = ({ tasks, setTasks, taskListId, setTaskListId }) => {
          });
    }
 
+   const updateTaskList = () => {
+      axios.put(`http://localhost:8080/api/taskList/${taskListId}`, { name: taskListName, userId: user?.userId})
+         .then(response => {
+            setTasks({taskListName: response.data?.name, tasks: response.data?.tasks});
+         })
+         .catch(error => {
+            console.log(error)
+         }).then( () => {
+            setOpenEditAlert(false);
+            setIsMoreClicked(false);
+         });
+   }
+
    const closeAlert = () => {
       setOpenDeleteAlert(false);
+      setOpenEditAlert(false);
    };
 
    return (
@@ -126,7 +142,7 @@ const Tasks = ({ tasks, setTasks, taskListId, setTaskListId }) => {
                      </div>
                      { isMoreClicked && (
                         <div className='tasklist__menu'>
-                        <p onClick={() => {}}>Edit name</p>
+                        <p onClick={() => setOpenEditAlert(true)}>Edit name</p>
                         <p onClick={() => setOpenDeleteAlert(true)}>Delete task list</p>
                      </div>
                      )}
@@ -213,22 +229,46 @@ const Tasks = ({ tasks, setTasks, taskListId, setTaskListId }) => {
 
       <ThemeProvider theme={dark}>
          <Dialog
-            open={openDeleteAlert}
+            open={openDeleteAlert || openEditAlert}
             onClose={closeAlert}
+            fullWidth
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
          >
             <DialogTitle id="alert-dialog-title">
-               {"Are you sure you want to delete this TaskList and all its tasks?"}
+               {openDeleteAlert ? 
+                  "Are you sure you want to delete this TaskList and all its tasks?":
+                  "Update Task List name"
+               }
             </DialogTitle>
             <DialogContent>
+               {openDeleteAlert && (
                <DialogContentText id="alert-dialog-description">
                   {tasks?.taskListName}
                </DialogContentText>
+               )}
+               {openEditAlert && (
+                  <TextField
+                     autoFocus
+                     margin="dense"
+                     id="name"
+                     label="Task List Name"
+                     type="text"
+                     fullWidth
+                     color='secondary'
+                     variant='standard'
+                     value={taskListName}
+                     onChange={(e) => setTaskListName(e.target.value)}
+                  />
+               )}
             </DialogContent>
             <DialogActions>
-               <Button onClick={closeAlert} color='secondary' variant='contained'>Disagree</Button>
-               <Button onClick={deleteTaskList} color='error' variant='contained' autoFocus>Agree</Button>
+               <Button onClick={closeAlert} color='secondary' variant='contained'>Cancel</Button>
+               {openDeleteAlert ? (
+                  <Button onClick={deleteTaskList} color='error' variant='contained' autoFocus>Delete</Button>
+               ) : (
+                  <Button onClick={updateTaskList} color='primary' variant='contained' autoFocus>Save Changes</Button>
+               )}
             </DialogActions>
          </Dialog>
       </ThemeProvider>
