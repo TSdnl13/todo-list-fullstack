@@ -12,6 +12,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import DensityMediumOutlinedIcon from '@mui/icons-material/DensityMediumOutlined';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 
@@ -23,7 +24,8 @@ import { IMPORTANT, PLANNED } from '../../constants/taskListId';
 
 var  completedTasks = [], pendingTasks = [];
 
-const Tasks = ({ tasks, setTasks, taskListId, setTaskListId, user }) => {
+const Tasks = ({ taskLists, tasks, setTasks, taskListId, setTaskListId, user }) => {
+   console.log(taskLists);
    const initialTaskState = {name: '', state: false, createdAt: '', taskListId: taskListId, dueDate: ''};
    const navbar = document.getElementById('navbar');
    const [showCompletedTasks, setShowCompletedTasks] = useState(false);
@@ -35,6 +37,8 @@ const Tasks = ({ tasks, setTasks, taskListId, setTaskListId, user }) => {
    const [taskListName, setTaskListName] = useState(tasks?.taskListName);
    const [dueDate, setDueDate] = useState(null);
    const [showDatePicker, setShowDatePicker] = useState(false);
+   const [taskListForCreate, setTaskListForCreate] = useState({ name: taskLists[0]?.name, id: taskLists[0]?.taskListId});
+   const [showTaskListMenu, setShowTaskListMenu] = useState(false);
 
    const darkCalendar = createTheme({
       palette: {
@@ -94,17 +98,24 @@ const Tasks = ({ tasks, setTasks, taskListId, setTaskListId, user }) => {
       axios.post('http://localhost:8080/api/task', 
          {
             ...taskData, 
+            taskListId: (taskListId === IMPORTANT || taskListId === PLANNED) ? taskListForCreate.id : taskData.taskListId,
             createdAt: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
             dueDate: dueDate ? format(dueDate, 'yyyy-MM-dd'): null
          })
       .then((response) => {
          setTaskData(initialTaskState);
          setTasks({...tasks, tasks: [...tasks.tasks, response.data]});
-         setDueDate(null);
+         cleanCreateTaskFields();
       })
       .catch(error => {
          console.log(error);
       });
+   }
+
+   const cleanCreateTaskFields = () => {
+      setDueDate(null);
+      setShowDatePicker(false);
+      setShowTaskListMenu(false);
    }
 
    const deleteTaskList = () => {
@@ -209,11 +220,43 @@ const Tasks = ({ tasks, setTasks, taskListId, setTaskListId, user }) => {
                   onChange={(e) => setTaskData({...taskData, name: e.target.value})}
                   value={taskData.name}
                />
+               {(taskListId === IMPORTANT || taskListId === PLANNED) && (
+                  <div className='tasks__select-tasklist'>
+                     <div
+                        className='tasks__selected-tasklist'
+                        onClick={() => {
+                           setShowTaskListMenu(prev => !prev)
+                           setShowDatePicker(false);
+                        }}
+                     >
+                        <DensityMediumOutlinedIcon  fontSize='small' />
+                        <p>{taskListForCreate.name}</p>
+                     </div>
+                     {showTaskListMenu && (
+                        <div className='tasks__tasklists'>
+                        {taskLists && taskLists.map((taskList) => (
+                           <div 
+                              key={taskList?.taskListId}
+                              onClick={()=>  {
+                                 setTaskListForCreate({name: taskList?.name, id: taskList?.taskListId});
+                                 setShowTaskListMenu(false);
+                              }}
+                           >
+                              <DensityMediumOutlinedIcon  fontSize='small' />
+                              <p>{taskList.name}</p>
+                           </div>
+                        ))}
+                        </div>
+                     )}
+                  </div>
+               )}
+
                <div className='duedate'>
                   <div
                      className='duedate-content'
                      onClick={() => {
                         setShowDatePicker(prev => !prev);
+                        setShowTaskListMenu(false);
                      }} 
                   >
                      {dueDate && (
@@ -254,7 +297,6 @@ const Tasks = ({ tasks, setTasks, taskListId, setTaskListId, user }) => {
                      )}
                   </div>
                   )}
-
                </div>
 
                <button type='button' onClick={createTask} >Create</button>
