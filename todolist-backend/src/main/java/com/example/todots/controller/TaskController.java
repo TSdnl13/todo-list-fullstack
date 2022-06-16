@@ -33,6 +33,13 @@ public class TaskController {
               .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
    }
 
+   @GetMapping(path = "/important/{userId}")
+   public ResponseEntity<List<Task>> getImportantTasksByUserId(@PathVariable("userId") Integer userId) {
+      return taskService.getImportantTasksByUserId(userId)
+              .map(importantTasks -> new ResponseEntity<>(importantTasks, HttpStatus.OK))
+              .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+   }
+
    @GetMapping(path = "/{taskId}")
    public ResponseEntity<Task> getTaskById(@PathVariable("taskId") Integer taskId) {
       return taskService.getTaskById(taskId)
