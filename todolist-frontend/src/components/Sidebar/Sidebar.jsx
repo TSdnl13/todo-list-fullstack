@@ -77,7 +77,7 @@ const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId, 
                <li 
                   className={taskListId === IMPORTANT ? 'sidebar-container active': 'sidebar-container'} 
                   onClick={() => {
-                     setTasks({ taskListName: 'Importants', tasks: findImportantTasks() });
+                     setTasks({ taskListName: 'Important', tasks: findImportantTasks() });
                      setTaskListId(IMPORTANT);
                   }}
                >
