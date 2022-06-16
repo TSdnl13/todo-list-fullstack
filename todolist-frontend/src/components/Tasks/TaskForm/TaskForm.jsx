@@ -143,7 +143,7 @@ const TaskForm = ({ task, setTaskFormId, setTasks,  tasks }) => {
 
                <div className='task-form__duedate'>
                   <div
-                     className={'duedate-content '  + (isBefore(newDate, new Date()) ? 'date-expired': '')}
+                     className={'duedate-content '  + (isBefore(new Date(newDate.toDateString() + ' 23:59:59'), new Date()) ? 'date-expired': '')}
                      onClick={() => {
                         setShowCalendar(prev => !prev);
                      }} 
@@ -163,7 +163,7 @@ const TaskForm = ({ task, setTaskFormId, setTasks,  tasks }) => {
                      <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <StaticDatePicker
                            displayStaticWrapperAs="desktop"
-                           value={formData.dueDate}                     
+                           value={newDate}                     
                            onChange={(newDate) => {
                               setNewDate(newDate);
                            }}
