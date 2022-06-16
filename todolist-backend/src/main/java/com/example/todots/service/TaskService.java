@@ -62,4 +62,8 @@ public class TaskService {
       }
       return false;
    }
+
+   public Optional<List<Task>> getImportantTasksByUserId(Integer userId) {
+      return taskRepository.findImportantTasksByUserId(userId);
+   }
 }
