@@ -3,7 +3,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
-import { format, isValid } from 'date-fns';
+import { format } from 'date-fns';
 
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
