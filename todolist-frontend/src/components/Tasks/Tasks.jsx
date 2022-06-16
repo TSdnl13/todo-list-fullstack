@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import AddSharpIcon from '@mui/icons-material/AddSharp';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import axios from 'axios';
 import { format, isValid } from 'date-fns';
+
+import AddSharpIcon from '@mui/icons-material/AddSharp';
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 
-
 import './Tasks.scss';
-import { DueDateTextField } from '../Inputs/Inputs';
 import Task from './Task/Task';
 import TaskForm from './TaskForm/TaskForm';
+import { DateTextField } from '../Inputs/Inputs';
 import { IMPORTANT, PLANNED } from '../../constants/taskListId';
 
 var  completedTasks = [], pendingTasks = [];
@@ -30,14 +33,23 @@ const Tasks = ({ tasks, setTasks, taskListId, setTaskListId, user }) => {
    const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
    const [openEditAlert, setOpenEditAlert] = useState(false);
    const [taskListName, setTaskListName] = useState(tasks?.taskListName);
-   
-   const darkDatePicker = createTheme({
+   const [dueDate, setDueDate] = useState(null);
+   const [showDatePicker, setShowDatePicker] = useState(false);
+
+   const darkCalendar = createTheme({
       palette: {
          mode: 'dark',
-         error: {main: '#292f58'},
+         primary: {
+            main: "#262b51",
+            light: '#363e74'
+         },
+         secondary: {
+            main: '#E65F2B'
+         },
+         error: {main: '#e23a23'},
          background: {
             default: '#1b1f3a',
-            paper: '#292f57'
+            paper: '#242d60'
          }
       }
    });
@@ -79,16 +91,16 @@ const Tasks = ({ tasks, setTasks, taskListId, setTaskListId, user }) => {
    }, [tasks, setTaskListId]);
 
    const createTask = () => {
-      let postData = {};
-      if (isValid(taskData.dueDate)) {
-         postData = {...taskData, dueDate: format(taskData.dueDate, 'yyyy-MM-dd')};
-      } else {
-         postData = {...taskData, dueDate: null};
-      }
-      axios.post('http://localhost:8080/api/task', {...postData, createdAt: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss")})
+      axios.post('http://localhost:8080/api/task', 
+         {
+            ...taskData, 
+            createdAt: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
+            dueDate: dueDate ? format(dueDate, 'yyyy-MM-dd'): null
+         })
       .then((response) => {
          setTaskData(initialTaskState);
          setTasks({...tasks, tasks: [...tasks.tasks, response.data]});
+         setDueDate(null);
       })
       .catch(error => {
          console.log(error);
@@ -197,19 +209,54 @@ const Tasks = ({ tasks, setTasks, taskListId, setTaskListId, user }) => {
                   onChange={(e) => setTaskData({...taskData, name: e.target.value})}
                   value={taskData.name}
                />
-               <ThemeProvider theme={darkDatePicker}>
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                     <DatePicker
-                        value={taskData.dueDate}
-                        onChange={(newDate) => {
-                           setTaskData({...taskData, dueDate: newDate});
+               <div className='duedate'>
+                  <div
+                     className='duedate-content'
+                     onClick={() => {
+                        setShowDatePicker(prev => !prev);
+                     }} 
+                  >
+                     {dueDate && (
+                     <div className='duedate-text'>
+                        {format(dueDate, "ccc',' MMM d',' y")}
+                     </div>
+                     )}
+
+                     <div className='calendar-icon'>
+                        <CalendarMonthOutlinedIcon />
+                     </div>
+                  </div>
+
+                  {showDatePicker && (
+                  <div className={'duedate-date-picker' + (dueDate ? '': ' no-date')}>
+                     <ThemeProvider theme={darkCalendar}>
+                     <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <StaticDatePicker
+                           displayStaticWrapperAs='desktop'
+                           value={dueDate}                     
+                           onChange={(newDate) => {
+                              setDueDate(newDate);
+                           }}
+                           renderInput={(params) => <DateTextField {...params} />}
+                        />
+                     </LocalizationProvider>
+                     </ThemeProvider>
+                     {dueDate && (
+                     <div
+                        className='clean-duedate' 
+                        onClick={() => {
+                           setShowDatePicker(false);
+                           setDueDate(null);
                         }}
-                        renderInput={(params) => (
-                           <DueDateTextField size='small' {...params} />
-                        )}
-                     />
-                  </LocalizationProvider>
-               </ThemeProvider>
+                     >
+                        <CloseOutlinedIcon />
+                     </div>
+                     )}
+                  </div>
+                  )}
+
+               </div>
+
                <button type='button' onClick={createTask} >Create</button>
             </div>
          </div>
