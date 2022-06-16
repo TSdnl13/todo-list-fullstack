@@ -9,33 +9,32 @@ import './Dashboard.scss';
 const Dashboard = () => {
    const user = JSON.parse(localStorage.getItem('user'));
 
-   const importantTasks = [];
    const [taskLists, setTaskLists] = useState([]);
    const [taskListId, setTaskListId] = useState(0);
    
    const [tasks, setTasks] = useState({taskListName: '', tasks: []});
 
    useEffect(() => {
+      axios.get(`http://localhost:8080/api/task/important/${user?.userId}`)
+      .then(response => {
+         setTasks({ taskListName: 'Important', tasks: response.data });
+      })
+      .catch(error => {
+         console.log(error);
+      });
+   }, [user?.userId]);
+   
+
+   useEffect(() => {
       axios.get(`http://localhost:8080/api/taskList/user?id=${user?.userId}`)
          .then((response) => {
             setTaskLists(response.data);
-            response.data.forEach(taskList => {
-               const importants = taskList?.tasks?.filter(task => task.important === true);
-               importants.forEach(imp => importantTasks.push(imp));
-            });
          }).catch(error => {
             console.log(error);
          });
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [taskListId, tasks]);
-   
-   useEffect(() => {
-      if (taskListId === 0){ 
-         setTasks({taskListName: 'Important', tasks: importantTasks})
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, []);
 
    return (
       <div className='dashboard'>
