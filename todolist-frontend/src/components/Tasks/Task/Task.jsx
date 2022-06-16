@@ -79,7 +79,7 @@ const Task = ({ task, setTasks, tasks,  setTaskFormId  }) => {
             {(formData.dueDate || formData.note) && (
             <p className='task__details-more-info'>
                {formData.dueDate && (
-               <span className={isBefore(new Date(formData.dueDate.concat(' 00:00:00')), new Date()) && formData.state === false ? 'date-expired':''}>
+               <span className={isBefore(new Date(formData.dueDate.concat(' 23:59:59')), new Date()) && formData.state === false ? 'date-expired':''}>
                   <CalendarTodayOutlinedIcon sx={{ color: 'primary.main', fontSize: '13px' }} /> 
                   {format(new Date(formData.dueDate.concat(' 00:00:00')), "eee',' MMM d")}
                </span>
