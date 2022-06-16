@@ -146,7 +146,7 @@
       outline: none;
       caret-color: #f8f8f8;
       flex: 1;
-      padding: 8px 2px;
+      padding: .65rem .3rem;
       font-size: 16px;
       color: #fdfdfd;
    }
@@ -159,6 +159,8 @@
 
       .duedate-text {
          flex: 1;
+         font-size: 14px;
+         font-weight: 400;
          padding: .65rem .3rem;
          cursor: default;
       }
@@ -264,6 +266,7 @@
       letter-spacing: 1px;
       font-size: 14px;
       font-weight: 300;
+      border-radius: .3rem;
 
       &:hover {
          background-color: #2a315a;
@@ -274,6 +277,55 @@
       height: 100%;
    }
 
+}
+
+.tasks__select-tasklist {
+   position: relative;
+
+   p {
+      cursor: default;
+   }
+
+   .tasks__selected-tasklist {
+      padding: .65rem .3rem;
+      display: flex;
+      border-radius: .3rem;
+      gap: .5rem;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 400;
+      
+      &:hover {
+         background-color: #2a315a;
+      }
+   }
+
+   .tasks__tasklists {
+      position: absolute;
+      bottom: 120%;
+      display: flex;
+      gap: .5rem;
+      flex-direction: column;
+      align-items: flex-start;
+      background-color: #242d60;
+      border-radius: .3rem;
+      min-width: 10rem;
+      padding: .2rem;
+
+      div {
+         display: flex;
+         gap: .5rem;
+         width: 100%;
+         padding: .4rem .3rem;
+         align-items: center;
+         font-size: 14px;
+         font-weight: 300;
+
+         &:hover {
+            background-color: #313868;
+         }
+      }
+   }
 }
 
 h2 {
