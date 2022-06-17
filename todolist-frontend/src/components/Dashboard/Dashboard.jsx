@@ -51,6 +51,7 @@ const Dashboard = () => {
             <Tasks
                taskLists={taskLists}
                tasks={tasks}
+               setTaskLists={setTaskLists}
                setTasks={setTasks}
                taskListId={taskListId}
                setTaskListId={setTaskListId} 
