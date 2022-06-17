@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FormControl, Input, TextField, InputLabel, IconButton } from '@mui/material';
+import { FormControl, Input, TextField, InputLabel, IconButton, FormHelperText } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { red } from '@mui/material/colors';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -36,7 +35,7 @@ const Auth = () => {
             main: "#e1e1e1",
          },
          error: {
-            main: red[900]
+            main: '#f44336'
          }
       }
    });
@@ -51,23 +50,36 @@ const Auth = () => {
    }
 
    const validateInputs = () =>{
+      let isErrors = {password: false, name: false, email: false }
       if (formData.name === '') {
          if (isSignUp) {
             setNameError(true);
+            isErrors = { ...isErrors, name: true }
          }else {
             setNameError(false);
          }
       }
       if (formData.email.trim() === '') {
          setEmailError(true);
+         isErrors = { ...isErrors, email: true }
          setErrorMessages({...errorMessages, email: "Cannot be empty"})
+      } else {
+         // eslint-disable-next-line no-useless-escape
+         const emailFormat = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+         if (!emailFormat.test(formData.email)) {
+            setEmailError(true);
+            isErrors = { ...isErrors, email: true }
+            setErrorMessages({...errorMessages, email: "Invalid email"});
+         } 
       }
       if (formData.password === '') {
          setPasswordError(true);
+         isErrors = { ...isErrors, password: true }
       }
 
-      if (!nameError && !passwordError && !emailError) return true;
-      return false;
+      if (isErrors.email || isErrors.password || isErrors.name) return false;
+      return true;
    }
 
    const handleSubmit = async () => {
@@ -93,11 +105,17 @@ const Auth = () => {
    }
 
    useEffect(() => {
-      
-      setErrorMessages({ 
-         ...errorMessages, 
-         email: errorMessages.status === 409 ? 'Email already taken':'User with this email doesn\'t exist' 
-      });
+      if (errorMessages.status === 409) {
+         setErrorMessages({ 
+            ...errorMessages, 
+            email: 'Email already taken'
+         });   
+      } else if (errorMessages.status === 404) {
+         setErrorMessages({ 
+            ...errorMessages, 
+            email: 'User with this email doesn\'t exist' 
+         });
+      }
       // eslint-disable-next-line
    }, [emailError]);
    
@@ -171,6 +189,7 @@ const Auth = () => {
                            </InputAdornment>
                         }
                      />
+                     {passwordError && <FormHelperText id="filled-weight-helper-text">Incorrect Password</FormHelperText>}
                   </FormControl>
                </ThemeProvider>
 
