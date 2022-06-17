@@ -3,11 +3,12 @@ import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownR
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 
 import './Navbar.scss';
 import { useNavigate } from 'react-router-dom';
 
-const Navbar = ({ user }) => {
+const Navbar = ({ user, setShowSidebar }) => {
    const [isArrowUp, setIsArrowUp] = useState(false);
    const navigate =  useNavigate();
    
@@ -18,7 +19,11 @@ const Navbar = ({ user }) => {
 
    return (
       <nav className='nav' id='navbar'>
-         <div className='relative'>
+         <div className='nav__navbar relative'>
+            <div className='nav__menu-icon' onClick={() => setShowSidebar(true)}>
+               <MenuOutlinedIcon />
+            </div>
+
             <div className='nav__profile' onClick={() => setIsArrowUp(prev => !prev)}>
                <div className='nav__profile-img'>
                   {user?.name?.split(' ')[0].charAt(0)}{user?.name?.split(' ')[1]?.charAt(0)}
@@ -29,6 +34,7 @@ const Navbar = ({ user }) => {
                ):(<KeyboardArrowDownRoundedIcon />)}
 
             </div>
+
             { isArrowUp && (
             <div className='nav__profile-menu'>
                <span>{user?.email}</span>

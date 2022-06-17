@@ -3,8 +3,34 @@
    display: flex;
    justify-content: flex-end;
    width: 100%;
-   padding: 10px 30px;
-   border-bottom: 2px solid rgba(0, 0, 0, 0.25);
+   padding: 10px 40px;
+   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+
+   @media screen and (max-width: 860px) {
+      display: block;
+   }
+
+   .nav__navbar {
+      @media screen and (max-width: 860px) {
+         display: flex;
+         justify-content: space-between;
+      }
+   }   
+
+   .nav__menu-icon {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      padding: .5rem .8rem;
+      border-radius: .3rem;
+      &:hover {
+         background-color: #292f57;
+      }
+      
+      @media screen and (min-width: 860px) {
+         display: none;
+      }
+   }
 
    .nav__profile {
       background-color: #16192e;

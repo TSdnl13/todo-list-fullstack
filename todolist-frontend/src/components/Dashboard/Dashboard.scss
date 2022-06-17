@@ -3,6 +3,7 @@
    max-height: 100vh;
    height: 100vh;
    display: flex;
+   overflow: hidden;
 
    .dashboard__panel {
       width: 100%;

@@ -2,15 +2,24 @@ import React, { useState } from 'react';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-import DensityMediumOutlinedIcon from '@mui/icons-material/DensityMediumOutlined';
+import ListRoundedIcon from '@mui/icons-material/ListRounded';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 
 import './Sidebar.scss';
 import { IMPORTANT, PLANNED } from '../../constants/taskListId';
 import axios from 'axios';
 
-const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId, user }) => {
+const Sidebar = ({taskLists,
+                  setTaskLists,
+                  setTasks,
+                  setTaskListId,
+                  taskListId,
+                  user,
+                  showSidebar,
+                  setShowSidebar 
+               }) => {
 
    const [openFormList, setOpenFormList] = useState(false);
    const [taskListName, setTaskListName] = useState('');
@@ -70,16 +79,26 @@ const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId, 
       setOpenFormList(false);
    }
 
+   const handleTaskListClick = (tasksData, id) => {
+      setTasks(tasksData);
+      setTaskListId(id);
+      setShowSidebar(false);
+   }
+
    return (
-      <div className="sidebar" >
+      <>
+      <div className={"sidebar" + (showSidebar ? ' show': '')} >
+         <div className='sidebar__menu-icon' onClick={() => setShowSidebar(false)}>
+            <MenuOutlinedIcon />
+         </div>
+
          <h1 className='h1 sidebar-container'>Ts To Do</h1>
          <div className='sidebar__menu'>
             <ul>
                <li 
                   className={taskListId === IMPORTANT ? 'sidebar-container active': 'sidebar-container'} 
                   onClick={() => {
-                     setTasks({ taskListName: 'Important', tasks: findImportantTasks() });
-                     setTaskListId(IMPORTANT);
+                     handleTaskListClick({ taskListName: 'Important', tasks: findImportantTasks() }, IMPORTANT);
                   }}
                >
                   <GradeOutlinedIcon fontSize='small' />
@@ -88,8 +107,7 @@ const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId, 
                <li 
                   className={taskListId === PLANNED ? 'sidebar-container active': 'sidebar-container'} 
                   onClick={() => {
-                     setTasks({ taskListName: 'Planed', tasks: findPlanedTasks() });
-                     setTaskListId(PLANNED);
+                     handleTaskListClick({ taskListName: 'Planed', tasks: findPlanedTasks() }, PLANNED);
                   }}
                >
                   <CalendarMonthOutlinedIcon fontSize='small' />
@@ -109,11 +127,11 @@ const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId, 
                      key={taskList.taskListId}
                      className={'sidebar-container ' + (taskList.taskListId === taskListId ? 'active': '')}
                      onClick={() => {
-                        setTasks({ taskListName: taskList.name, tasks: taskList.tasks})
-                        setTaskListId(taskList.taskListId);
+                        handleTaskListClick({ taskListName: taskList.name, tasks: taskList.tasks},
+                           taskList.taskListId);
                      }}
                   >
-                     <DensityMediumOutlinedIcon  fontSize='small' />
+                     <ListRoundedIcon fontSize='small' />
                      <p>{taskList.name}</p>
                      {taskList?.tasks?.length > 0 && 
                      (<span>{taskList.tasks?.filter(task => task.state === false).length}</span>)}
@@ -121,6 +139,7 @@ const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId, 
                ))}
             </ul>         
          </div>
+         
          <div className='sidebar__create-tasklist'>
             <button type='button' onClick={() => setOpenFormList(true)}>
                <AddSharpIcon fontSize='small' /> New List
@@ -156,6 +175,9 @@ const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId, 
          </Dialog>
          </ThemeProvider>
       </div>
+
+      {showSidebar && <div className='full-overlay' onClick={() => setShowSidebar(false)} />}
+      </>
    )
 }
 
