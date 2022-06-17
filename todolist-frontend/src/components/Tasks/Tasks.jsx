@@ -4,6 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
 import { format } from 'date-fns';
+import {Alert, Snackbar } from '@mui/material';
 
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
@@ -24,8 +25,7 @@ import { IMPORTANT, PLANNED } from '../../constants/taskListId';
 
 var  completedTasks = [], pendingTasks = [];
 
-const Tasks = ({ taskLists, tasks, setTasks, taskListId, setTaskListId, user }) => {
-   console.log(taskLists);
+const Tasks = ({ taskLists, setTaskLists, tasks, setTasks, taskListId, setTaskListId, user }) => {
    const initialTaskState = {name: '', state: false, createdAt: '', taskListId: taskListId, dueDate: ''};
    const navbar = document.getElementById('navbar');
    const [showCompletedTasks, setShowCompletedTasks] = useState(false);
@@ -37,8 +37,9 @@ const Tasks = ({ taskLists, tasks, setTasks, taskListId, setTaskListId, user }) 
    const [taskListName, setTaskListName] = useState(tasks?.taskListName);
    const [dueDate, setDueDate] = useState(null);
    const [showDatePicker, setShowDatePicker] = useState(false);
-   const [taskListForCreate, setTaskListForCreate] = useState({ name: taskLists[0]?.name, id: taskLists[0]?.taskListId});
+   const [taskListForCreate, setTaskListForCreate] = useState({ name: '', id: 0});
    const [showTaskListMenu, setShowTaskListMenu] = useState(false);
+   const [showWarningCreateTask, setShowWarningCreateTask] = useState(false);
 
    const darkCalendar = createTheme({
       palette: {
@@ -78,6 +79,7 @@ const Tasks = ({ taskLists, tasks, setTasks, taskListId, setTaskListId, user }) 
    
    useEffect(() => {
       setTaskData({...taskData, taskListId: taskListId});
+      setTaskListForCreate({ name: taskLists[0]?.name, id: taskLists[0]?.taskListId });
    // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [taskListId]);
    
@@ -95,6 +97,10 @@ const Tasks = ({ taskLists, tasks, setTasks, taskListId, setTaskListId, user }) 
    }, [tasks, setTaskListId]);
 
    const createTask = () => {
+      if (taskLists.length === 0) {
+         setShowWarningCreateTask(true);
+         return;
+      }
       axios.post('http://localhost:8080/api/task', 
          {
             ...taskData, 
@@ -122,7 +128,15 @@ const Tasks = ({ taskLists, tasks, setTasks, taskListId, setTaskListId, user }) 
       axios.delete(`http://localhost:8080/api/taskList/delete/${taskListId}`)
          .then(response => {
             setTaskListId(0);
-            setTasks({taskListName: '', tasks: []});
+            const currentTaskLists = taskLists.filter(list => list.taskListId !== taskListId);
+            setTaskLists(currentTaskLists);
+            
+            const importantTasks = [];
+            currentTaskLists.forEach(taskList => {
+               const importants = taskList?.tasks?.filter(task => task.important === true);
+               importants.forEach(imp => importantTasks.push(imp));
+            });
+            setTasks({ taskListName: 'Important', tasks: importantTasks })
          })
          .catch(error => {
             console.log(error);
@@ -150,6 +164,10 @@ const Tasks = ({ taskLists, tasks, setTasks, taskListId, setTaskListId, user }) 
       setOpenEditAlert(false);
    };
 
+   const handleCloseWarning = () => {
+      setShowWarningCreateTask(false);
+   };
+
    return (
       <>
       <div className='tasks' style={{ height: `calc(100vh - ${navbar?.offsetHeight}px)`}}>
@@ -174,6 +192,10 @@ const Tasks = ({ taskLists, tasks, setTasks, taskListId, setTaskListId, user }) 
                   </>
                   )}
                </div>
+
+               {(pendingTasks?.length === 0 && completedTasks?.length === 0) && (
+                  <h3 className='h3'>There is no taks yet</h3>
+               )}
 
                {pendingTasks?.length > 0 && (
                   <ul>
@@ -303,6 +325,23 @@ const Tasks = ({ taskLists, tasks, setTasks, taskListId, setTaskListId, user }) 
             </div>
          </div>
       </div>
+
+      <Snackbar
+         anchorOrigin={{ vertical: 'bottom', horizontal: 'right'}}
+         open={showWarningCreateTask}
+         autoHideDuration={4000}
+         onClose={handleCloseWarning}
+      >
+         <Alert
+            onClose={handleCloseWarning}
+            severity="warning"
+            variant='filled'
+            elevation={6}
+            sx={{ backgroundColor: '#b74316', color: '#F0f0f0', fontSize: '16px'}}
+         >
+            You must first create a list.
+         </Alert>
+      </Snackbar>
 
       {taskFormId !== 0 && (
          <>
