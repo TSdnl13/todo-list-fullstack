@@ -11,6 +11,7 @@ const Dashboard = () => {
 
    const [taskLists, setTaskLists] = useState([]);
    const [taskListId, setTaskListId] = useState(0);
+   const [showSidebar, setShowSidebar] = useState(false);
    
    const [tasks, setTasks] = useState({taskListName: '', tasks: []});
 
@@ -45,9 +46,11 @@ const Dashboard = () => {
             setTaskListId={setTaskListId} 
             taskListId={taskListId}
             user={user}
+            showSidebar={showSidebar}
+            setShowSidebar={setShowSidebar} 
          />
          <div className='dashboard__panel'>
-            <Navbar user={user} />
+            <Navbar user={user} setShowSidebar={setShowSidebar} />
             <Tasks
                taskLists={taskLists}
                tasks={tasks}
