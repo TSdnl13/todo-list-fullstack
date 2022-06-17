@@ -4,6 +4,7 @@
    display: flex;
    flex-direction: column;
    min-width: 280px;
+   max-width: 320px;
    align-items: flex-start;
    position: relative;
 
@@ -49,6 +50,10 @@ p {
    }
 }
 .sidebar__tasklists {
+   display: flex;
+   flex: 1;
+   flex-direction: column;
+
    span {
       width: 16px;
       height: 16px;
@@ -62,6 +67,18 @@ p {
       font-weight: 200;
       color: #FFF;
       right: 5%;
+   }
+
+   .sidebar__tasklists-empty {
+      display: flex;
+      width: 100%;
+      padding: .5rem;
+      font-size: 16px;
+      font-weight: 300;
+      text-align: center;
+      color: #c7c7c7;
+      flex: 1;
+      align-items: center;
    }
 }
 .sidebar__menu {

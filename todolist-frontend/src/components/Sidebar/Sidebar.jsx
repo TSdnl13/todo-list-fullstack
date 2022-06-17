@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import DensityMediumOutlinedIcon from '@mui/icons-material/DensityMediumOutlined';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -55,6 +54,8 @@ const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId, 
       axios.post('http://localhost:8080/api/taskList', { name: taskListName, userId: user?.userId })
          .then(response => {
             setTaskLists(prev => [...prev, response.data]);
+            setTaskListId(response.data?.taskListId);
+            setTasks({taskListName: response.data?.name , tasks: []});
          })
          .catch(error => {
             console.log(error);
@@ -94,13 +95,14 @@ const Sidebar = ({taskLists, setTaskLists, setTasks, setTaskListId, taskListId, 
                   <CalendarMonthOutlinedIcon fontSize='small' />
                   <p>Planed</p>
                </li> 
-               <li className='sidebar-container'>
-                  <HomeOutlinedIcon fontSize='small' />
-                  <p>Tasks</p>
-               </li>
             </ul>
          </div>
+
          <div className='sidebar__tasklists'>
+            {taskLists?.length === 0 && (
+               <div className='sidebar__tasklists-empty'>There is no list to save tasks yets, create one to start saving tasks.
+                  Click in 'New List' at the bottom left</div>
+            )}
             <ul>
                {taskLists && taskLists.map((taskList) => (
                   <li
