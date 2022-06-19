@@ -37,7 +37,7 @@ const Tasks = ({ taskLists, setTaskLists, tasks, setTasks, taskListId, setTaskLi
    const [taskListName, setTaskListName] = useState(tasks?.taskListName);
    const [dueDate, setDueDate] = useState(null);
    const [showDatePicker, setShowDatePicker] = useState(false);
-   const [taskListForCreate, setTaskListForCreate] = useState({ name: '', id: 0});
+   const [taskListForCreate, setTaskListForCreate] = useState({ name: '', id: undefined});
    const [showTaskListMenu, setShowTaskListMenu] = useState(false);
    const [showWarningCreateTask, setShowWarningCreateTask] = useState(false);
 
@@ -97,7 +97,7 @@ const Tasks = ({ taskLists, setTaskLists, tasks, setTasks, taskListId, setTaskLi
    }, [tasks, setTaskListId]);
 
    const createTask = () => {
-      if (taskLists.length === 0) {
+      if (taskListForCreate.id === undefined) {
          setShowWarningCreateTask(true);
          return;
       }
@@ -339,7 +339,7 @@ const Tasks = ({ taskLists, setTaskLists, tasks, setTasks, taskListId, setTaskLi
             elevation={6}
             sx={{ backgroundColor: '#b74316', color: '#F0f0f0', fontSize: '16px'}}
          >
-            You must first create a list.
+            You must choose or create a list.
          </Alert>
       </Snackbar>
 
