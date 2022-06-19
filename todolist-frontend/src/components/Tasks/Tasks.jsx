@@ -101,7 +101,7 @@ const Tasks = ({ taskLists, setTaskLists, tasks, setTasks, taskListId, setTaskLi
          setShowWarningCreateTask(true);
          return;
       }
-      axios.post('http://localhost:8080/api/task', 
+      axios.post('https://spring-tstodolist.herokuapp.com/api/task', 
          {
             ...taskData, 
             taskListId: (taskListId === IMPORTANT || taskListId === PLANNED) ? taskListForCreate.id : taskData.taskListId,
@@ -125,7 +125,7 @@ const Tasks = ({ taskLists, setTaskLists, tasks, setTasks, taskListId, setTaskLi
    }
 
    const deleteTaskList = () => {
-      axios.delete(`http://localhost:8080/api/taskList/delete/${taskListId}`)
+      axios.delete(`https://spring-tstodolist.herokuapp.com/api/taskList/delete/${taskListId}`)
          .then(response => {
             setTaskListId(0);
             const currentTaskLists = taskLists.filter(list => list.taskListId !== taskListId);
@@ -147,7 +147,7 @@ const Tasks = ({ taskLists, setTaskLists, tasks, setTasks, taskListId, setTaskLi
    }
 
    const updateTaskList = () => {
-      axios.put(`http://localhost:8080/api/taskList/${taskListId}`, { name: taskListName, userId: user?.userId})
+      axios.put(`https://spring-tstodolist.herokuapp.com/api/taskList/${taskListId}`, { name: taskListName, userId: user?.userId})
          .then(response => {
             setTasks({taskListName: response.data?.name, tasks: response.data?.tasks});
          })

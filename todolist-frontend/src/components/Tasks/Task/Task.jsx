@@ -28,7 +28,7 @@ const Task = ({ task, setTasks, tasks,  setTaskFormId  }) => {
    const [formData, setFormData] = useState(initialState);
 
    const updateTask = async (e) => {
-      const url = `http://localhost:8080/api/task/${formData.taskId}`;
+      const url = `https://spring-tstodolist.herokuapp.com/api/task/${formData.taskId}`;
 
       setFormData({ ...formData, [e.target.name]: e.target.checked });
       let completedDate = (e.target.name === 'state') ? format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"): formData.completedAt;

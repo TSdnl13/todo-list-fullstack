@@ -16,7 +16,7 @@ const Dashboard = () => {
    const [tasks, setTasks] = useState({taskListName: '', tasks: []});
 
    useEffect(() => {
-      axios.get(`http://localhost:8080/api/task/important/${user?.userId}`)
+      axios.get(`https://spring-tstodolist.herokuapp.com/api/task/important/${user?.userId}`)
       .then(response => {
          setTasks({ taskListName: 'Important', tasks: response.data });
       })
@@ -27,7 +27,7 @@ const Dashboard = () => {
    
 
    useEffect(() => {
-      axios.get(`http://localhost:8080/api/taskList/user?id=${user?.userId}`)
+      axios.get(`https://spring-tstodolist.herokuapp.com/api/taskList/user?id=${user?.userId}`)
          .then((response) => {
             setTaskLists(response.data);
          }).catch(error => {
