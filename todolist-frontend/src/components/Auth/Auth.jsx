@@ -136,9 +136,9 @@ const Auth = () => {
    }
 
    return (
-      <div className='container'>
+      <div className='auth'>
          <h1 className='h1'>{isSignUp ? 'Sign Up':'Log In'}</h1>
-         <div className='min-width-400'>
+         <div className='auth__container'>
             <div className='form'>
                <ThemeProvider theme={darkTheme}>
                   <TextField
