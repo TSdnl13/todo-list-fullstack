@@ -3,6 +3,12 @@
    display: flex;
    gap: 5px;
    overflow: hidden;
+
+   @media screen and (max-width: 860px ) {
+      padding: 1rem .8rem;
+      width: 100%;
+      flex-direction: column;
+   }
 }
 .tasks__container {
    flex: 1;
@@ -140,6 +146,19 @@
       background-color: #363e74;
    }
 
+   @media screen and (max-width: 480px) {
+      flex-wrap: wrap;
+      svg {
+         height: 22px !important;
+      }
+      
+      button,
+      .duedate,
+      .tasks__select-tasklist {
+         flex: 1;
+      }
+   }
+
    input {
       border: none;
       background-color: transparent;
@@ -178,6 +197,13 @@
          &.no-date {
             right: 0;
          }
+
+         @media screen and (max-width: 480px) {  
+            left: 0;        
+            &.no-date {
+               right: 0;
+            }
+         }
       } 
 
       .clean-duedate {
@@ -201,6 +227,10 @@
       display: flex;
       justify-content: space-between;
       border-radius: .3rem;
+
+      @media screen and (max-width: 480px) {
+         justify-content: center;
+      }
       
       &:hover {
          background-color: #2a315a;
@@ -259,7 +289,7 @@
       color: #f0f0f0;
       border: none;
       display: flex;
-      height: 100%;
+      padding: .65rem .3rem;
       align-items: center;
       justify-content: center;
       text-transform: uppercase;
@@ -311,6 +341,10 @@
       border-radius: .3rem;
       min-width: 10rem;
       padding: .2rem;
+
+      @media screen and (max-width: 480px) {
+         right: 0;
+      }
 
       div {
          display: flex;
