@@ -6,7 +6,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import { PrimaryButton } from '../Buttons/Buttons';
+import { MyLoadingButton } from '../Buttons/Buttons';
 import './Auth.scss';
 
 const initialState = { email: '', password: '', name: ''}
@@ -19,6 +19,7 @@ const Auth = () => {
    const [formData, setFormData] = useState(initialState);
    const [showPassword, setShowPassword] = useState(false);
    const [errorMessages, setErrorMessages] = useState({ email: '', password: '', status: 0});
+   const [loadingSubmit, setLoadingSubmit] = useState(false);
 
    const navigate = useNavigate();
 
@@ -101,6 +102,8 @@ const Auth = () => {
             setErrorMessages({...errorMessages, status: 409});
             setEmailError(true);
          }
+      } finally {
+         setLoadingSubmit(false);
       }
    }
 
@@ -193,9 +196,16 @@ const Auth = () => {
                   </FormControl>
                </ThemeProvider>
 
-               <PrimaryButton variant='contained' onClick={handleSubmit}>
+               <MyLoadingButton 
+                  variant='contained' 
+                  onClick={() => {
+                     setLoadingSubmit(true);
+                     handleSubmit();
+                  }} 
+                  loading={loadingSubmit} 
+               >
                   {isSignUp ? 'Sign Up' : 'Sign In'}
-               </PrimaryButton>
+               </MyLoadingButton>
             </div>
 
             <div style={{ textAlign: 'center'}}>
