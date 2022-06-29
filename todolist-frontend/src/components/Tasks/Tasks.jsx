@@ -1,63 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
-import { format } from 'date-fns';
 import {Alert, Snackbar } from '@mui/material';
 
-import AddSharpIcon from '@mui/icons-material/AddSharp';
-import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import DensityMediumOutlinedIcon from '@mui/icons-material/DensityMediumOutlined';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 
 import './Tasks.scss';
 import Task from './Task/Task';
 import TaskForm from './TaskForm/TaskForm';
-import { DateTextField } from '../Inputs/Inputs';
 import { IMPORTANT, PLANNED } from '../../constants/taskListId';
+import CreateTaskForm from './CreateTaskForm/CreateTaskForm';
 
 var  completedTasks = [], pendingTasks = [];
 
 const Tasks = ({ taskLists, setTaskLists, tasks, setTasks, taskListId, setTaskListId, user }) => {
-   const initialTaskState = {name: '', state: false, createdAt: '', taskListId: taskListId, dueDate: ''};
    const navbar = document.getElementById('navbar');
    const [showCompletedTasks, setShowCompletedTasks] = useState(false);
-   const [taskData, setTaskData] = useState(initialTaskState);
    const [taskFormId, setTaskFormId] = useState(0);
    const [isMoreClicked, setIsMoreClicked] = useState(false);
    const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
    const [openEditAlert, setOpenEditAlert] = useState(false);
    const [taskListName, setTaskListName] = useState(tasks?.taskListName);
-   const [dueDate, setDueDate] = useState(null);
-   const [showDatePicker, setShowDatePicker] = useState(false);
-   const [taskListForCreate, setTaskListForCreate] = useState({ name: '', id: undefined});
-   const [showTaskListMenu, setShowTaskListMenu] = useState(false);
    const [showWarningCreateTask, setShowWarningCreateTask] = useState(false);
-
-   const darkCalendar = createTheme({
-      palette: {
-         mode: 'dark',
-         primary: {
-            main: "#262b51",
-            light: '#363e74'
-         },
-         secondary: {
-            main: '#E65F2B'
-         },
-         error: {main: '#e23a23'},
-         background: {
-            default: '#1b1f3a',
-            paper: '#242d60'
-         }
-      }
-   });
 
    const dark = createTheme({
       palette: {
@@ -78,12 +46,6 @@ const Tasks = ({ taskLists, setTaskLists, tasks, setTasks, taskListId, setTaskLi
    });
    
    useEffect(() => {
-      setTaskData({...taskData, taskListId: taskListId});
-      setTaskListForCreate({ name: taskLists[0]?.name, id: taskLists[0]?.taskListId });
-   // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [taskListId]);
-   
-   useEffect(() => {
       completedTasks = tasks.tasks?.filter(task => task.state === true);
       pendingTasks = tasks.tasks?.filter(task => task.state === false);
       if (taskListId === IMPORTANT) {
@@ -95,34 +57,6 @@ const Tasks = ({ taskLists, setTaskLists, tasks, setTasks, taskListId, setTaskLi
       }
    // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [tasks, setTaskListId]);
-
-   const createTask = () => {
-      if (taskListForCreate.id === undefined) {
-         setShowWarningCreateTask(true);
-         return;
-      }
-      axios.post('http://localhost:8080/api/task', 
-         {
-            ...taskData, 
-            taskListId: (taskListId === IMPORTANT || taskListId === PLANNED) ? taskListForCreate.id : taskData.taskListId,
-            createdAt: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
-            dueDate: dueDate ? format(dueDate, 'yyyy-MM-dd'): null
-         })
-      .then((response) => {
-         setTaskData(initialTaskState);
-         setTasks({...tasks, tasks: [...tasks.tasks, response.data]});
-         cleanCreateTaskFields();
-      })
-      .catch(error => {
-         console.log(error);
-      });
-   }
-
-   const cleanCreateTaskFields = () => {
-      setDueDate(null);
-      setShowDatePicker(false);
-      setShowTaskListMenu(false);
-   }
 
    const deleteTaskList = () => {
       axios.delete(`http://localhost:8080/api/taskList/delete/${taskListId}`)
@@ -234,95 +168,12 @@ const Tasks = ({ taskLists, setTaskLists, tasks, setTasks, taskListId, setTaskLi
 
             </div>
 
-            <div className='tasks__create-task'>
-               <AddSharpIcon fontSize='small' />
-               <input
-                  type='text'
-                  placeholder='New Task'
-                  onChange={(e) => setTaskData({...taskData, name: e.target.value})}
-                  value={taskData.name}
-               />
-               {(taskListId === IMPORTANT || taskListId === PLANNED) && (
-                  <div className='tasks__select-tasklist'>
-                     <div
-                        className='tasks__selected-tasklist'
-                        onClick={() => {
-                           setShowTaskListMenu(prev => !prev)
-                           setShowDatePicker(false);
-                        }}
-                     >
-                        <DensityMediumOutlinedIcon  fontSize='small' />
-                        <p>{taskListForCreate.name}</p>
-                     </div>
-                     {showTaskListMenu && (
-                        <div className='tasks__tasklists'>
-                        {taskLists && taskLists.map((taskList) => (
-                           <div 
-                              key={taskList?.taskListId}
-                              onClick={()=>  {
-                                 setTaskListForCreate({name: taskList?.name, id: taskList?.taskListId});
-                                 setShowTaskListMenu(false);
-                              }}
-                           >
-                              <DensityMediumOutlinedIcon  fontSize='small' />
-                              <p>{taskList.name}</p>
-                           </div>
-                        ))}
-                        </div>
-                     )}
-                  </div>
-               )}
-
-               <div className='duedate'>
-                  <div
-                     className='duedate-content'
-                     onClick={() => {
-                        setShowDatePicker(prev => !prev);
-                        setShowTaskListMenu(false);
-                     }} 
-                  >
-                     {dueDate && (
-                     <div className='duedate-text'>
-                        {format(dueDate, "ccc',' MMM d',' y")}
-                     </div>
-                     )}
-
-                     <div className='calendar-icon'>
-                        <CalendarMonthOutlinedIcon />
-                     </div>
-                  </div>
-
-                  {showDatePicker && (
-                  <div className={'duedate-date-picker' + (dueDate ? '': ' no-date')}>
-                     <ThemeProvider theme={darkCalendar}>
-                     <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <StaticDatePicker
-                           displayStaticWrapperAs='desktop'
-                           value={dueDate}                     
-                           onChange={(newDate) => {
-                              setDueDate(newDate);
-                           }}
-                           renderInput={(params) => <DateTextField {...params} />}
-                        />
-                     </LocalizationProvider>
-                     </ThemeProvider>
-                     {dueDate && (
-                     <div
-                        className='clean-duedate' 
-                        onClick={() => {
-                           setShowDatePicker(false);
-                           setDueDate(null);
-                        }}
-                     >
-                        <CloseOutlinedIcon />
-                     </div>
-                     )}
-                  </div>
-                  )}
-               </div>
-
-               <button type='button' onClick={createTask} >Create</button>
-            </div>
+            <CreateTaskForm 
+               setShowWarningCreateTask={setShowWarningCreateTask} 
+               setTasks={setTasks}
+               taskListId={taskListId}
+               taskLists={taskLists}
+            />
          </div>
       </div>
 
