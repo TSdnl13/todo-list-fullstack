@@ -6,14 +6,13 @@ import './App.scss';
 import Dashboard from './components/Dashboard/Dashboard';
 
 const App = () => {
-   const user = JSON.parse(localStorage.getItem('user'));
-
+   
    return (
       <Router>
          <Routes>
             <Route path='/' element={<Navigate to='/auth' />} />
             <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='/auth' element={!user ? <Auth />:<Navigate to='/dashboard' />} />
+            <Route path='/auth' element={<Auth />} />
          </Routes>
       </Router>
    );

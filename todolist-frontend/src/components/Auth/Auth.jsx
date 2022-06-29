@@ -20,8 +20,13 @@ const Auth = () => {
    const [showPassword, setShowPassword] = useState(false);
    const [errorMessages, setErrorMessages] = useState({ email: '', password: '', status: 0});
    const [loadingSubmit, setLoadingSubmit] = useState(false);
-
    const navigate = useNavigate();
+
+   useEffect(() => {
+      const user  =JSON.parse(localStorage.getItem('user'))
+      if (user) navigate('/dashboard')
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [])
 
    const darkTheme = createTheme({
       palette: {

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../Navbar/Navbar';
 import Sidebar from '../Sidebar/Sidebar';
 import Tasks from '../Tasks/Tasks';
+import { useNavigate } from 'react-router-dom'; 
 
 import './Dashboard.scss';
 
@@ -12,8 +13,14 @@ const Dashboard = () => {
    const [taskLists, setTaskLists] = useState([]);
    const [taskListId, setTaskListId] = useState(0);
    const [showSidebar, setShowSidebar] = useState(false);
+   const navigate = useNavigate();
    
    const [tasks, setTasks] = useState({taskListName: '', tasks: []});
+
+   useEffect(() => {
+      if (!user) navigate('/auth')
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [])
 
    useEffect(() => {
       axios.get(`http://localhost:8080/api/task/important/${user?.userId}`)
