@@ -60,7 +60,7 @@ const Sidebar = ({taskLists,
    }
 
    const createNewTaskList = () => {
-      axios.post('http://localhost:8080/api/taskList', { name: taskListName, userId: user?.userId })
+      axios.post('https://spring-tstodolist.herokuapp.com/api/taskList', { name: taskListName, userId: user?.userId })
          .then(response => {
             setTaskLists(prev => [...prev, response.data]);
             setTaskListId(response.data?.taskListId);

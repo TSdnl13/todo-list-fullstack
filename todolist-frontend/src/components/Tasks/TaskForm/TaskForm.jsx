@@ -59,7 +59,7 @@ const TaskForm = ({ task, setTaskFormId, setTasks,  tasks }) => {
       } else if (!prevState && putData.state === true) {
          putData.completedAt = format(new Date(), "yyyy-MM-dd'T'HH:mm:ss");
       }
-      const url = `http://localhost:8080/api/task/${putData.taskId}`;
+      const url = `https://spring-tstodolist.herokuapp.com/api/task/${putData.taskId}`;
       axios.put(url, {...putData, dueDate: newDate ? format(newDate, 'yyyy-MM-dd') : null})
          .then(response => {
             const updatedTask = response.data;
@@ -73,7 +73,7 @@ const TaskForm = ({ task, setTaskFormId, setTasks,  tasks }) => {
    }
 
    const deleteTask = () => {
-      const url = `http://localhost:8080/api/task/delete/${task?.taskId}`;
+      const url = `https://spring-tstodolist.herokuapp.com/api/task/delete/${task?.taskId}`;
       axios.delete(url)
       .then(response => {
          const deletedTaskId = task?.taskId;
