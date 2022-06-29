@@ -23,6 +23,12 @@ const Auth = () => {
 
    const navigate = useNavigate();
 
+   useEffect(() => {
+      const user  =JSON.parse(localStorage.getItem('user'))
+      if (user) navigate('/dashboard')
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [])
+
    const darkTheme = createTheme({
       palette: {
          mode: 'dark',
@@ -87,6 +93,7 @@ const Auth = () => {
       if (!validateInputs()) return;
 
       try {
+         setLoadingSubmit(true);
          const response = await axios.post(`https://spring-tstodolist.herokuapp.com/api/user${isSignUp ? '': '/signIn'}`, formData);
            
          const user = { email: response.data?.email, userId: response.data?.userId, name: response.data?.name }
@@ -199,7 +206,6 @@ const Auth = () => {
                <MyLoadingButton 
                   variant='contained' 
                   onClick={() => {
-                     setLoadingSubmit(true);
                      handleSubmit();
                   }} 
                   loading={loadingSubmit} 

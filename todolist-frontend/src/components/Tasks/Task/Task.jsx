@@ -74,7 +74,7 @@ const Task = ({ task, setTasks, tasks,  setTaskFormId  }) => {
          />
 
          <div className='task__details'>
-            <p>{formData.name}</p>
+            <p style={{ textDecoration: formData.state ? 'line-through':'none'  }}>{ formData.name}</p>
 
             {(formData.dueDate || formData.note) && (
             <p className='task__details-more-info'>
