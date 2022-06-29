@@ -107,11 +107,11 @@ const Sidebar = ({taskLists,
                <li 
                   className={taskListId === PLANNED ? 'sidebar-container active': 'sidebar-container'} 
                   onClick={() => {
-                     handleTaskListClick({ taskListName: 'Planed', tasks: findPlanedTasks() }, PLANNED);
+                     handleTaskListClick({ taskListName: 'Planned', tasks: findPlanedTasks() }, PLANNED);
                   }}
                >
                   <CalendarMonthOutlinedIcon fontSize='small' />
-                  <p>Planed</p>
+                  <p>Planned</p>
                </li> 
             </ul>
          </div>
